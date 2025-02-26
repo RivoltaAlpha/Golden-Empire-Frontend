@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.grid-container {
+    width: 600px; /* Adjust to fit your background */
+    height: 400px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 0px 0px;
+    grid-template-areas:
+        "header header header header header header"
+        "menu main main main right right"
+        "menu main main main right right"
+        "footer footer footer footer footer footer";
+}
