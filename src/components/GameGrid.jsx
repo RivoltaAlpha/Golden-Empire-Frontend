@@ -1,4 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from "react";
 import { getRandomSymbol, gridSize, checkForWins, specialAnimation, wildAnimation, scatterAnimation, isScatter, isWild, isSpecial } from "../Utiils/utilities";
 import Controls from "./ControlPanel";
@@ -7,7 +9,7 @@ import JackpotBanner from "./JackpotNotification";
 const GameGrid = () => {
   const [slots, setSlots] = useState([]);
   const [globalMultiplier, setGlobalMultiplier] = useState(1);
-  const [coins, setCoins] = useState(100);
+  const [coins, setCoins] = useState(1000);
   const [jackpotTriggered, setJackpotTriggered] = useState(false);
   const [betAmount, setBetAmount] = useState(10);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -29,7 +31,7 @@ const GameGrid = () => {
 
   const spin = () => {
     if (coins < betAmount) {
-      alert("Not enough coins to place the bet.");
+      toast("Not enough coins to place the bet.");
       return;
     }
 
@@ -45,6 +47,7 @@ const GameGrid = () => {
 
   return (
     <div className="flex justify-center items-center h-screen w-full relative">
+      <ToastContainer />
       <div className="absolute top-0 left-0 w-full h-full"
         style={{
           backgroundImage: "url('/images/background.png')",
@@ -53,10 +56,8 @@ const GameGrid = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <AnimatePresence>
-          {jackpotTriggered && <JackpotBanner />}
-        </AnimatePresence>
-        <div className="grid grid-cols-6 gap-2 p-30 my-56 items-center justify-center w-[650px] mx-auto h-[400px]">
+        <AnimatePresence> {jackpotTriggered && <JackpotBanner />} </AnimatePresence>
+        <div className="grid grid-cols-6 p-30 lg:my-60 items-center justify-center w-[650px] mx-auto h-[400px]">
         {slots.flat().map((symbol, index) => {
           const animation = isScatter(symbol)
             ? scatterAnimation
@@ -68,7 +69,7 @@ const GameGrid = () => {
           return (
             <motion.div
               key={index}
-              className="w-[80px] h-[80px] flex items-center justify-center bg-transparent"
+              className="w-[80px] h-[80px] flex items-center justify-center bg-transparent" 
               {...animation}
               initial={{ opacity: 0, y: -50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -83,7 +84,7 @@ const GameGrid = () => {
           );
         })}
       </div>
-
+      <div className="w-full flex flex-col sm:flex-row items-center justify-center mt-4 space-y-4 sm:space-y-0 sm:space-x-4">
         <Controls
           coins={coins}
           betAmount={betAmount}
@@ -91,6 +92,7 @@ const GameGrid = () => {
           spin={spin}
           globalMultiplier={globalMultiplier}
         />
+        </div>
         </div>
     </div>
   );
