@@ -31,15 +31,6 @@ const GameGrid = () => {
 		setSlots(newSlots);
 	};
 
-
-
-	// useEffect(() => {
-	// 	backgroundMusic.play(); // Start playing background music when the game loads
-
-	// 	return () => {
-	// 		backgroundMusic.stop(); // Stop music when the component unmounts (optional)
-	// 	};
-	// }, []);
 useEffect(() => {
 	const handleUserInteraction = () => {
 		if (!backgroundMusic.playing()) {
@@ -60,7 +51,7 @@ useEffect(() => {
 
 	const spin = () => {
 		if (coins < betAmount) {
-			alert("Not enough coins to place the bet.");
+			toast("Not enough coins to place the bet.");
 			return;
 		}
 
