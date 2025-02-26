@@ -1,15 +1,14 @@
 import React from 'react';
 import TopBanner from './TopBanner';
 import GameGrid from './GameGrid';
-import ControlPanel from './ControlPanel';
 
 const UIDesign = () => {
+
+  
     return (
-        <div className="relative w-full max-w-4xl mx-auto"  style={{ height: "100vh" }}>          
-          <div className="relative">
-            <TopBanner />
+        <div className=" w-1/2 max-w-6xl mx-auto" >          
+          <div className="mb-4 ">
             <GameGrid />
-            <ControlPanel />
           </div>
         </div>
       );
