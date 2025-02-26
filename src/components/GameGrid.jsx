@@ -2,9 +2,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from "react";
-import { getRandomSymbol, gridSize, checkForWins, specialAnimation, wildAnimation, scatterAnimation, isScatter, isWild, isSpecial } from "../Utiils/utilities";
+import {
+	getRandomSymbol,
+	gridSize,
+	checkForWins,
+	specialAnimation,
+	wildAnimation,
+	scatterAnimation,
+	isScatter,
+	isWild,
+	isSpecial,
+} from "../Utiils/utilities";
 import Controls from "./ControlPanel";
 import JackpotBanner from "./JackpotNotification";
+import { backgroundMusic } from "../Utiils/soundManager";
 
 const GameGrid = () => {
   const [slots, setSlots] = useState([]);
@@ -17,17 +28,18 @@ const GameGrid = () => {
   const [megaWilds, setMegaWilds] = useState([]);
   const [freeSpins, setFreeSpins] = useState(0);
 
-// generate random symbols for the grid
-  useEffect(() => {
-    generateNewGrid();
-  }, []);
 
-  const generateNewGrid = () => {
-    let newSlots = Array(gridSize.rows)
-      .fill(null)
-      .map(() => Array(gridSize.cols).fill(null).map(getRandomSymbol));
-    setSlots(newSlots);
-  };
+	// generate random symbols for the grid
+	useEffect(() => {
+		generateNewGrid();
+	}, []);
+
+	const generateNewGrid = () => {
+		let newSlots = Array(gridSize.rows)
+			.fill(null)
+			.map(() => Array(gridSize.cols).fill(null).map(getRandomSymbol));
+		setSlots(newSlots);
+	};
 
   const spin = () => {
     if (coins < betAmount) {
@@ -35,16 +47,39 @@ const GameGrid = () => {
       return;
     }
 
-    setCoins(coins - betAmount);
-    setIsSpinning(true);
+	// useEffect(() => {
+	// 	backgroundMusic.play(); // Start playing background music when the game loads
 
-    setTimeout(() => {
-      generateNewGrid();
-      setIsSpinning(false);
-      checkForWins(slots, setCoins, setGlobalMultiplier, setJackpotTriggered, setMegaWilds, setStickyWilds, setFreeSpins);
-    }, 800);
-  };
+	// 	return () => {
+	// 		backgroundMusic.stop(); // Stop music when the component unmounts (optional)
+	// 	};
+	// }, []);
+useEffect(() => {
+	const handleUserInteraction = () => {
+		if (!backgroundMusic.playing()) {
+			backgroundMusic.play();
+		}
+		// Remove event listener after first interaction
+		window.removeEventListener("click", handleUserInteraction);
+	};
 
+	// Add a click event listener to start music on user interaction
+	window.addEventListener("click", handleUserInteraction);
+
+	return () => {
+		backgroundMusic.stop(); // Stop music when component unmounts (optional)
+		window.removeEventListener("click", handleUserInteraction);
+	};
+}, []);
+
+	const spin = () => {
+		if (coins < betAmount) {
+			alert("Not enough coins to place the bet.");
+			return;
+		}
+
+		setCoins(coins - betAmount);
+		setIsSpinning(true);
   return (
     <div className="flex justify-center items-center h-screen w-full relative">
       <ToastContainer />
@@ -99,4 +134,3 @@ const GameGrid = () => {
 };
 
 export default GameGrid;
-

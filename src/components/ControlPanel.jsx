@@ -3,12 +3,18 @@ import { FaRedo, FaCoins } from "react-icons/fa";
 import { GiSpinningBlades } from "react-icons/gi";
 import { Howl } from "howler";
 import { useState } from "react";
+import {
+	spinSound,
+	winSound,
+	gameOverSound,
+	pauseBackgroundMusic,
+} from "../Utiils/soundManager";
 
-const spinSound = new Howl({
-	src: ["/sounds/spin-sound-2.mp3"],
-	volume: 1.0,
-	loop: false,
-});
+// const spinSound = new Howl({
+// 	src: ["/sounds/spin-sound-2.mp3"],
+// 	volume: 1.0,
+// 	loop: false,
+// });
 
 const Controls = ({
 	coins,
@@ -18,6 +24,7 @@ const Controls = ({
 	globalMultiplier,
 }) => {
 	const handleSpin = () => {
+    pauseBackgroundMusic;
 		spinSound.play(); // Play sound when spin is clicked
 		spin();
 
