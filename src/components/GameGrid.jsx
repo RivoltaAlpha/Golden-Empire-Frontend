@@ -1,17 +1,21 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { getRandomSymbol, gridSize, checkForWins, cascadeSymbols, specialAnimation, wildAnimation, scatterAnimation, isScatter, isWild, isSpecial } from "../Utiils/utilities";
+import { getRandomSymbol, gridSize, checkForWins, specialAnimation, wildAnimation, scatterAnimation, isScatter, isWild, isSpecial } from "../Utiils/utilities";
 import Controls from "./ControlPanel";
 import JackpotBanner from "./JackpotNotification";
 
 const GameGrid = () => {
   const [slots, setSlots] = useState([]);
   const [globalMultiplier, setGlobalMultiplier] = useState(1);
-  const [coins, setCoins] = useState(1000);
+  const [coins, setCoins] = useState(100);
   const [jackpotTriggered, setJackpotTriggered] = useState(false);
   const [betAmount, setBetAmount] = useState(10);
   const [isSpinning, setIsSpinning] = useState(false);
+  const [stickyWilds, setStickyWilds] = useState({});
+  const [megaWilds, setMegaWilds] = useState([]);
+  const [freeSpins, setFreeSpins] = useState(0);
 
+// generate random symbols for the grid
   useEffect(() => {
     generateNewGrid();
   }, []);
@@ -35,7 +39,7 @@ const GameGrid = () => {
     setTimeout(() => {
       generateNewGrid();
       setIsSpinning(false);
-      checkForWins(slots, setCoins, setGlobalMultiplier, setJackpotTriggered);
+      checkForWins(slots, setCoins, setGlobalMultiplier, setJackpotTriggered, setMegaWilds, setStickyWilds, setFreeSpins);
     }, 800);
   };
 
@@ -52,21 +56,6 @@ const GameGrid = () => {
         <AnimatePresence>
           {jackpotTriggered && <JackpotBanner />}
         </AnimatePresence>
-
-
-        {/* <div className="grid grid-cols-6 gap-2 p-20 items-center justify-center w-[650px] mx-auto h-[400px]">
-          {slots.flat().map((symbol, index) => (
-            <motion.div
-              key={index}
-              className="flex items-center justify-center bg-transparent"
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: isSpinning ? 0.8 : 0.5 }}
-            >
-              <img src={`/images/${symbol}.png`} alt={symbol} className="w-full h-full object-contain" />
-            </motion.div>
-          ))}
-        </div> */}
         <div className="grid grid-cols-6 gap-2 p-30 my-56 items-center justify-center w-[650px] mx-auto h-[400px]">
         {slots.flat().map((symbol, index) => {
           const animation = isScatter(symbol)
@@ -76,7 +65,6 @@ const GameGrid = () => {
             : isSpecial(symbol)
             ? specialAnimation
             : {};
-
           return (
             <motion.div
               key={index}
