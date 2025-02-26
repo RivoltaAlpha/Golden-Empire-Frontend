@@ -1,41 +1,39 @@
-import Controls from "./Controls";
+import { motion } from "framer-motion";
+import { FaRedo, FaCoins } from "react-icons/fa";
+import { GiSpinningBlades } from "react-icons/gi";
 
-
-const SettingsButton = () => (
-    <button className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors" title="Settings">
-      <div className="w-6 h-6 bg-gray-400 rounded-full" />
-    </button>
-  );
-  
-  const BalanceDisplay = ({ amount }) => (
-    <div className="text-yellow-500">
-      <div className="text-sm">Balance</div>
-      <div className="text-xl font-bold">{amount.toFixed(2)}</div>
-    </div>
-  );
-  
-  const WinDisplay = ({ amount }) => (
-    <div className="text-yellow-500">
-      <div className="text-sm">WIN</div>
-      <div className="text-xl font-bold">{amount.toFixed(2)}</div>
-    </div>
-  );
-  
-
-const ControlPanel = ({ balance = 1988.30, win = 0.00, bet = 1 }) => {
-    return (
-      <div className="bg-gray-900 p-4 rounded-b-lg flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <SettingsButton />
-          <BalanceDisplay amount={balance} />
+const Controls = ({ coins, betAmount, setBetAmount, spin, globalMultiplier }) => {
+  return (
+    <div className="bg-gray-900 p-4 my-2 rounded-b-lg flex items-center justify-between bottom-36 relative">
+      <div className="flex items-center gap-10">
+        <div className="text-lg font-bold text-yellow-400">
+          Global Multiplier: x{globalMultiplier}
         </div>
-  
-        <div className="flex items-center gap-4">
-          <WinDisplay amount={win} />
-          <Controls />
+
+        <div className="text-lg font-bold text-green-400 flex items-center gap-2">
+          <FaCoins /> Balance: {coins}
         </div>
+
+        <div className="mt-4">
+          <input
+            type="number"
+            value={betAmount}
+            onChange={(e) => setBetAmount(Math.max(0, e.target.value))}
+            className="border p-2 rounded-md w-24"
+            placeholder="Bet Amount"
+          />
+        </div>
+
+        <motion.button
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 mt-4"
+          whileTap={{ scale: 0.9 }}
+          onClick={spin}
+        >
+          <GiSpinningBlades /> Spin
+        </motion.button>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
-export default ControlPanel;    
+export default Controls;
