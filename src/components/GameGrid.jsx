@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from "react";
-import { getRandomSymbol, gridSize, checkForWins, specialAnimation, wildAnimation, scatterAnimation, isScatter, isWild, isSpecial } from "../Utiils/utilities";
+import { getRandomSymbol, gridSize, checkForWins, specialAnimation, wildAnimation, scatterAnimation, isScatter, isWild, isSpecial, isMegaWild } from "../Utiils/utilities";
 import Controls from "./ControlPanel";
 import JackpotBanner from "./JackpotNotification";
 import { backgroundMusic } from "../Utiils/soundManager";
@@ -19,35 +19,47 @@ const GameGrid = () => {
   const [freeSpins, setFreeSpins] = useState(0);
 
 
-	// generate random symbols for the grid
-	useEffect(() => {
-		generateNewGrid();
-	}, []);
+    // generate random symbols for the grid
+    useEffect(() => {
+      generateNewGrid();
+    }, []);
 
-	const generateNewGrid = () => {
-		let newSlots = Array(gridSize.rows)
-			.fill(null)
-			.map(() => Array(gridSize.cols).fill(null).map(getRandomSymbol));
-		setSlots(newSlots);
-	};
+    const generateNewGrid = () => {
+      let newSlots = Array(gridSize.rows)
+        .fill(null)
+        .map(() => Array(gridSize.cols).fill(null).map(getRandomSymbol));
 
-useEffect(() => {
-	const handleUserInteraction = () => {
-		if (!backgroundMusic.playing()) {
-			backgroundMusic.play();
-		}
-		// Remove event listener after first interaction
-		window.removeEventListener("click", handleUserInteraction);
-	};
+        // Place a Mega Wild randomly
+        if (Math.random() < 0.1) {  // 10% chance to spawn a Mega Wild
+          const row = Math.floor(Math.random() * (gridSize.rows - 1));
+          const col = Math.floor(Math.random() * (gridSize.cols - 1));
+          newSlots[row][col] = "mega_wild";
+          newSlots[row + 1][col] = "mega_wild";
+          newSlots[row][col + 1] = "mega_wild";
+          newSlots[row + 1][col + 1] = "mega_wild";
+          setMegaWilds([...megaWilds, { row, col }]);
+        }
 
-	// Add a click event listener to start music on user interaction
-	window.addEventListener("click", handleUserInteraction);
+      setSlots(newSlots);
+    };
 
-	return () => {
-		backgroundMusic.stop(); // Stop music when component unmounts (optional)
-		window.removeEventListener("click", handleUserInteraction);
-	};
-}, []);
+    useEffect(() => {
+      const handleUserInteraction = () => {
+        if (!backgroundMusic.playing()) {
+          backgroundMusic.play();
+        }
+        // Remove event listener after first interaction
+        window.removeEventListener("click", handleUserInteraction);
+      };
+
+      // Add a click event listener to start music on user interaction
+      window.addEventListener("click", handleUserInteraction);
+
+      return () => {
+        backgroundMusic.stop(); // Stop music when component unmounts (optional)
+        window.removeEventListener("click", handleUserInteraction);
+      };
+    }, []);
 
 	const spin = () => {
 		if (coins < betAmount) {
@@ -55,17 +67,32 @@ useEffect(() => {
 			return;
 		}
 
+    if (freeSpins === 0 && coins < betAmount) {
+      toast.error("Not enough coins to place the bet.");
+      return;
+    }
+
+    if (freeSpins === 0) {
+      setCoins(prevCoins => prevCoins - betAmount);
+    } else {
+      setFreeSpins(prev => prev - 1);
+      toast.info(`Free Spin! ${freeSpins - 1} left.`);
+    }
+
     setCoins(coins - betAmount);
     setIsSpinning(true);
 
     setTimeout(() => {
       generateNewGrid();
-      setIsSpinning(false);
-      checkForWins(slots, setCoins, setGlobalMultiplier, setJackpotTriggered, setMegaWilds, setStickyWilds, setFreeSpins);
+      setTimeout(() => {
+        setIsSpinning(false);
+        checkForWins(slots, setCoins, setGlobalMultiplier, setJackpotTriggered, setMegaWilds, setStickyWilds, setFreeSpins, setFreeSpins);
+      }, 100);
     }, 800);
   };
+
     return (
-      <div className="flex justify-center items-center h-screen w-full relative">
+      <div className="h-screen relative w-1/2 mx-auto">
         <ToastContainer />
         <div className="absolute top-0 left-0 w-full h-full"
           style={{
@@ -76,7 +103,7 @@ useEffect(() => {
           }}
         >
           <AnimatePresence> {jackpotTriggered && <JackpotBanner />} </AnimatePresence>
-          <div className="grid grid-cols-6 p-30 lg:my-60 items-center justify-center w-[650px] mx-auto h-[400px]">
+          <div className="grid grid-cols-6 p-30 lg:my-60 items-center justify-center w-[700px] mx-auto h-[450px]">
           {slots.flat().map((symbol, index) => {
             const animation = isScatter(symbol)
               ? scatterAnimation
@@ -84,8 +111,10 @@ useEffect(() => {
               ? wildAnimation
               : isSpecial(symbol)
               ? specialAnimation
+              : isMegaWild(symbol)
+              ? { scale: [1, 1.5, 1], transition: { duration: 0.6, repeat: Infinity } }
               : {};
-            return (
+                          return (
               <motion.div
                 key={index}
                 className="w-[80px] h-[80px] flex items-center justify-center bg-transparent" 
@@ -103,7 +132,8 @@ useEffect(() => {
             );
           })}
         </div>
-        <div className="w-full flex flex-col sm:flex-row items-center justify-center mt-4 space-y-4 sm:space-y-0 sm:space-x-4">
+          </div>
+        <div className=" absolutew-full flex flex-col sm:flex-row items-center justify-center mt-4 space-y-4 sm:space-y-0 sm:space-x-4">
           <Controls
             coins={coins}
             betAmount={betAmount}
@@ -111,7 +141,6 @@ useEffect(() => {
             spin={spin}
             globalMultiplier={globalMultiplier}
           />
-          </div>
           </div>
       </div>
     );

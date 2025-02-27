@@ -1,19 +1,19 @@
 import React from "react";
 import './index.css'
-import UIDesign from "./components/UIDesign";
+import GameGrid from "./components/GameGrid";
 
 const App = () => {
   return (
     <>
-    <div className="absolute inset-0 bg-cover bg-center h-screen"  style={{
-        backgroundImage:"url('https://img.freepik.com/free-vector/desert-pyramids-clear-sky_1308-163411.jpg?uid=R154664640&semt=ais_hybrid')",
+    <div className="absolute inset-0 bg-cover bg-center max-h-screen"  style={{
+        backgroundImage:"url('/images/bgimage.jpg')",
         overflow: "hidden",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}>
     </div>
     <div className="relative z-10 p-10">    
-        <UIDesign />
+    <GameGrid />
     </div>
     </>
     

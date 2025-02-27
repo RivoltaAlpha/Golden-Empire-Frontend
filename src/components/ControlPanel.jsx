@@ -10,12 +10,6 @@ import {
 	pauseBackgroundMusic,
 } from "../Utiils/soundManager";
 
-// const spinSound = new Howl({
-// 	src: ["/sounds/spin-sound-2.mp3"],
-// 	volume: 1.0,
-// 	loop: false,
-// });
-
 const Controls = ({
 	coins,
 	betAmount,
@@ -34,7 +28,7 @@ const Controls = ({
 	};
 
 	return (
-		<div className="bg-gray-900 p-4 my-2 rounded-b-lg flex items-center justify-between bottom-36 relative">
+		<div className="bg-gray-900 p-4 my-2 rounded-b-lg flex items-center justify-between absolute w-full">
 			<div className="flex items-center gap-10">
 				<div className="text-lg font-bold text-yellow-400">
 					Global Multiplier: x{globalMultiplier}

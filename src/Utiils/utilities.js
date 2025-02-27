@@ -1,7 +1,8 @@
+import { toast } from "react-toastify";
 import { cascadeAnimation, jackpotAnimation, winAnimation } from "./Animations";
 
 export const regularSymbols = [
-  "purple_eye", "green_totem", "rocks", "ace", "king", "queen", "jack", "ten"
+  "purple_eye", "green_totem", "rocks", "ace", "king", "queen", "jack", "ten", "scatter", "mega_wild", "super", "kingScatter", "red_mask", "v-purpleye","jackpot", "v-scatter"
 ];
 
 export const paytable = {
@@ -52,6 +53,7 @@ export const wildAnimation = {
 };
 
 export const isWild = (symbol) => wildSymbols.includes(symbol);
+export const isMegaWild = (symbol) => symbol === "mega";
 
 export const specialAnimation = {
   initial: { opacity: 0, scale: 0.8 },
@@ -125,7 +127,7 @@ export const checkForWins = (
       }, 500);
     }
   } else {
-    console.log("Loss - No winning conditions met.");
+    toast("Loss - No winning conditions met.");
   }
 };
 
@@ -208,3 +210,4 @@ export const applyCascadingReels = (grid) => {
     }
   }
 };
+
