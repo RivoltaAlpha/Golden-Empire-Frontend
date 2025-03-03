@@ -28,13 +28,13 @@ const Controls = ({
 	};
 
 	return (
-		<div className="bg-gray-900 p-4 my-2 rounded-b-lg flex items-center justify-between absolute w-full">
+		<div className="bg-gray-900 p-4 my-2 rounded-b-lg lg:flex flex-col items-center justify-between absolute lg:w-full">
 			<div className="flex items-center gap-10">
 				<div className="text-lg font-bold text-yellow-400">
 					Global Multiplier: x{globalMultiplier}
 				</div>
 
-				<div className="text-lg font-bold text-green-400 flex items-center gap-2">
+				<div className="text-lg font-bold text-white flex items-center gap-2">
 					<FaCoins /> Balance: {coins}
 				</div>
 

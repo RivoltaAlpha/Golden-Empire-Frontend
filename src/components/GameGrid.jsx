@@ -3,9 +3,9 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from "react";
 import { getRandomSymbol, gridSize, checkForWins, specialAnimation, wildAnimation, scatterAnimation, isScatter, isWild, isSpecial, isMegaWild } from "../Utiils/utilities";
-import Controls from "./ControlPanel";
 import JackpotBanner from "./JackpotNotification";
 import { backgroundMusic } from "../Utiils/soundManager";
+import Controls from "./ControlPanel";
 
 const GameGrid = () => {
   const [slots, setSlots] = useState([]);
@@ -42,6 +42,37 @@ const GameGrid = () => {
 
       setSlots(newSlots);
     };
+    const [topReel, setTopReel] = useState(Array(4).fill(null).map(getRandomSymbol));
+
+    const spin = () => {
+      if (coins < betAmount) {
+        toast("Not enough coins to place the bet.");
+        return;
+      }
+  
+      if (freeSpins === 0 && coins < betAmount) {
+        toast.error("Not enough coins to place the bet.");
+        return;
+      }
+  
+      if (freeSpins === 0) {
+        setCoins(prevCoins => prevCoins - betAmount);
+      } else {
+        setFreeSpins(prev => prev - 1);
+        toast.info(`Free Spin! ${freeSpins - 1} left.`);
+      }
+  
+      setCoins(coins - betAmount);
+      setIsSpinning(true);
+  
+      setTimeout(() => {
+        generateNewGrid();
+        setTimeout(() => {
+          setIsSpinning(false);
+          checkForWins(slots, setCoins, setGlobalMultiplier, setJackpotTriggered, setMegaWilds, setStickyWilds, setFreeSpins, setFreeSpins);
+        }, 100);
+      }, 800);
+    };
 
     useEffect(() => {
       const handleUserInteraction = () => {
@@ -61,88 +92,73 @@ const GameGrid = () => {
       };
     }, []);
 
-	const spin = () => {
-		if (coins < betAmount) {
-			toast("Not enough coins to place the bet.");
-			return;
-		}
 
-    if (freeSpins === 0 && coins < betAmount) {
-      toast.error("Not enough coins to place the bet.");
-      return;
-    }
-
-    if (freeSpins === 0) {
-      setCoins(prevCoins => prevCoins - betAmount);
-    } else {
-      setFreeSpins(prev => prev - 1);
-      toast.info(`Free Spin! ${freeSpins - 1} left.`);
-    }
-
-    setCoins(coins - betAmount);
-    setIsSpinning(true);
-
-    setTimeout(() => {
-      generateNewGrid();
-      setTimeout(() => {
-        setIsSpinning(false);
-        checkForWins(slots, setCoins, setGlobalMultiplier, setJackpotTriggered, setMegaWilds, setStickyWilds, setFreeSpins, setFreeSpins);
-      }, 100);
-    }, 800);
-  };
 
     return (
-      <div className="h-screen relative w-1/2 mx-auto">
-        <ToastContainer />
-        <div className="absolute top-0 left-0 w-full h-full"
-          style={{
-            backgroundImage: "url('/images/background.png')",
-            backgroundSize: "contain",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <AnimatePresence> {jackpotTriggered && <JackpotBanner />} </AnimatePresence>
-          <div className="grid grid-cols-6 p-30 lg:my-60 items-center justify-center w-[700px] mx-auto h-[450px]">
-          {slots.flat().map((symbol, index) => {
-            const animation = isScatter(symbol)
-              ? scatterAnimation
-              : isWild(symbol)
-              ? wildAnimation
-              : isSpecial(symbol)
-              ? specialAnimation
-              : isMegaWild(symbol)
-              ? { scale: [1, 1.5, 1], transition: { duration: 0.6, repeat: Infinity } }
-              : {};
-                          return (
-              <motion.div
-                key={index}
-                className="w-[80px] h-[80px] flex items-center justify-center bg-transparent" 
-                {...animation}
-                initial={{ opacity: 0, y: -50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: isSpinning ? 0.8 : 0.5 }}
-              >
-                <img
-                  src={`/images/${symbol}.png`}
-                  alt={symbol}
-                  className="w-full h-full object-contain"
-                />
-              </motion.div>
-            );
-          })}
+<div className="h-screen relative flex items-center justify-center">
+  <ToastContainer />
+  
+  {/* Background Image */}
+  <div className="absolute inset-0 bg-no-repeat bg-center my-10 mx-auto" 
+       style={{ backgroundImage: "url('/images/background.png')" }}>
+  </div>
+
+  {/* Main Slot Game Container */}
+  <div className="relative z-10 flex mt-36 flex-col items-center">
+    <AnimatePresence>{jackpotTriggered && <JackpotBanner />}</AnimatePresence>
+
+    {/* Top Horizontal Reel (Special Cascading Row) */}
+    <div className="grid grid-cols-6 gap-1 ml-28 mb-5 w-[480px] h-[80px]">
+      {topReel.map((symbol, index) => (
+        <motion.div key={index} className="w-[80px] h-[80px] flex items-center justify-center"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: isSpinning ? 0.8 : 0.5 }}>
+          <img src={`/images/${symbol}.png`} alt={symbol} className="w-full h-full object-contain" />
+        </motion.div>
+      ))}
+    </div>
+
+    {/* Main Vertical Cascading Reels */}
+    <div className="grid grid-cols-6 grid-rows-5 gap-4 my-4 w-full h-[300px]">
+      {slots.flat().map((symbol, index) => {
+        const animation = isScatter(symbol)
+          ? scatterAnimation
+          : isWild(symbol)
+          ? wildAnimation
+          : isSpecial(symbol)
+          ? specialAnimation
+          : isMegaWild(symbol)
+          ? { scale: [1, 1.5, 1], transition: { duration: 0.6, repeat: Infinity } }
+          : {};
+
+        return (
+          <motion.div
+            key={index}
+            className="w-[80px] h-[80px] flex items-center gap-2 justify-center bg-transparent"
+            {...animation}
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: isSpinning ? 0.8 : 0.5 }}
+          >
+            <img src={`/images/${symbol}.png`} alt={symbol} className="w-full h-full object-contain" />
+          </motion.div>
+        );
+      })}
+    </div>
+                  {/* Controls */}
+        <div className="w-full flex flex-col sm:flex-row items-center justify-center mt-40 space-y-4 sm:space-y-0 sm:space-x-4">
+            <Controls
+                coins={coins}
+                betAmount={betAmount}
+                setBetAmount={setBetAmount}
+                spin={spin}
+                globalMultiplier={globalMultiplier}
+            />
         </div>
-          </div>
-        <div className=" absolutew-full flex flex-col sm:flex-row items-center justify-center mt-4 space-y-4 sm:space-y-0 sm:space-x-4">
-          <Controls
-            coins={coins}
-            betAmount={betAmount}
-            setBetAmount={setBetAmount}
-            spin={spin}
-            globalMultiplier={globalMultiplier}
-          />
-          </div>
-      </div>
+  </div>
+</div>
+
     );
 };
 

@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import { cascadeAnimation, jackpotAnimation, winAnimation } from "./Animations";
 
 export const regularSymbols = [
-  "purple_eye", "green_totem", "rocks", "ace", "king", "queen", "jack", "ten", "scatter", "mega_wild", "super", "kingScatter", "red_mask", "v-purpleye","jackpot", "v-scatter"
+  "purple_eye", "green_totem", "rocks", "ace", "king", "queen", "jack", "ten", "scatter"
 ];
 
 export const paytable = {
@@ -27,7 +27,7 @@ export const specialSymbols = [
 ];
 
 export const wildSymbols = [
-  "wild", "mega_wild", "super", "kingScatter", "v-scatter", "red_mask", "v-purpleye", "jackpot", "v-scatter"
+  "wild", "mega_wild", "super", "kingScatter", "v-scatter", "v-purpleye", "jackpot", "v-scatter"
 ];
 
 export const winSymbols = ["win", "big", "mega"];
@@ -126,8 +126,6 @@ export const checkForWins = (
         setCoins((prev) => prev + winAmount);
       }, 500);
     }
-  } else {
-    toast("Loss - No winning conditions met.");
   }
 };
 
@@ -211,3 +209,57 @@ export const applyCascadingReels = (grid) => {
   }
 };
 
+export const checkForJackpot = (grid) => {
+  let jackpotCount = 0;
+
+  for (let row = 0; row < gridSize.rows; row++) {
+    for (let col = 0; col < gridSize.cols; col++) {
+      if (grid[row][col] === "jackpot") {
+        jackpotCount++;
+      }
+    }
+  }
+
+  return jackpotCount >= 3;
+};
+
+export const checkForMegaWild = (grid) => {
+  let megaWildCount = 0;
+
+  for (let row = 0; row < gridSize.rows; row++) {
+    for (let col = 0; col < gridSize.cols; col++) {
+      if (grid[row][col] === "mega") {
+        megaWildCount++;
+      }
+    }
+  }
+
+  return megaWildCount >= 3;
+}
+
+export const checkForWin = (grid) => {
+  let winCount = 0;
+
+  for (let row = 0; row < gridSize.rows; row++) {
+    for (let col = 0; col < gridSize.cols; col++) {
+      if (grid[row][col] === "win") {
+        winCount++;
+      }
+    }
+  }
+
+  return winCount >= 3;
+};
+
+export const spinningEffect = (slots, setSlots, setCoins, setGlobalMultiplier, setJackpotTriggered, setFreeSpins) => {
+  let newGrid = [...slots];
+
+  for (let row = 0; row < gridSize.rows; row++) {
+    for (let col = 0; col < gridSize.cols; col++) {
+      newGrid[row][col] = getRandomSymbol();
+    }
+  }
+
+  setSlots(newGrid);
+  setTimeout(() => checkForWins(newGrid, setCoins, setGlobalMultiplier, setJackpotTriggered, setFreeSpins), 500);
+}

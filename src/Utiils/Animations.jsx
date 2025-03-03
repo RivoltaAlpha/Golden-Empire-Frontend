@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-
 // Winning Symbol Animation
 export const winAnimation = {
   initial: { scale: 1 },
