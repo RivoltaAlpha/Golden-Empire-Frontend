@@ -2,9 +2,10 @@ import { Howl, Howler } from "howler";
 
 // Background music (looped)
 export const backgroundMusic = new Howl({
-	src: ["/sounds/background.mp3"],
+	src: ["/sounds/playingsound.mp3"],
 	volume: 0.5,
 	loop: true,
+	
 });
 
 // Function to pause and resume background music
@@ -22,7 +23,7 @@ export const resumeBackgroundMusic = () => {
 
 // Spin sound
 export const spinSound = new Howl({
-	src: ["/sounds/spin.mp3"],
+	src: ["/sounds/clicksound.mp3"],
 	volume: 1.0,
 	loop: false,
 	onend: resumeBackgroundMusic, // Resume background music after spin sound
