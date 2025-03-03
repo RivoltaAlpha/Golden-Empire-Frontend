@@ -5,7 +5,12 @@ export const backgroundMusic = new Howl({
 	src: ["/sounds/playingsound.mp3"],
 	volume: 0.5,
 	loop: true,
-	
+});
+// Background music (looped)
+export const SpecialSound = new Howl({
+	src: ["/sounds/special.mp3"],
+	volume: 0.5,
+	loop: true,
 });
 
 // Function to pause and resume background music

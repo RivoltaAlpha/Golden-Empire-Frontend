@@ -3,16 +3,13 @@
 @tailwind utilities;
 
 
-.grid-container {
-    width: 600px; /* Adjust to fit your background */
-    height: 400px;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap: 0px 0px;
-    grid-template-areas:
-        "header header header header header header"
-        "menu main main main right right"
-        "menu main main main right right"
-        "footer footer footer footer footer footer";
-}
+@keyframes glow {
+    0% { box-shadow: 0 0 5px white; }
+    50% { box-shadow: 0 0 20px yellow; }
+    100% { box-shadow: 0 0 5px white; }
+  }
+  
+  .special-symbol {
+    animation: glow 1s infinite alternate;
+  }
+  

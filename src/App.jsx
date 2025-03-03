@@ -3,10 +3,11 @@ import './index.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Landing from './Pages/Landing';
 import Game from "./Pages/Game";
+import MusicProvider from "./components/MusicProvider";
 
 const App = () => {
   return (
-    <>
+    <MusicProvider>
           <Router>
               <div className="absolute inset-0 bg-cover bg-center max-h-screen"  style={{
                 backgroundImage:"url('/images/bgimage.jpg')",
@@ -21,7 +22,7 @@ const App = () => {
                </Routes>
             </div>
         </Router>
-    </>
+    </MusicProvider>
     
   );
 };

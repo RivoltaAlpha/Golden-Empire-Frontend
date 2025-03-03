@@ -2,9 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from "react";
-import { getRandomSymbol, gridSize, checkForWins, specialAnimation, wildAnimation, scatterAnimation, isScatter, isWild, isSpecial, isMegaWild } from "../Utiils/utilities";
+import { getRandomSymbol, gridSize, checkForWins, specialAnimation, wildAnimation, scatterAnimation, isScatter, isWild, isSpecial, isMegaWild, glowingAnimation } from "../Utiils/utilities";
 import JackpotBanner from "./JackpotNotification";
-import { backgroundMusic } from "../Utiils/soundManager";
+import { backgroundMusic, SpecialSound } from "../Utiils/soundManager";
 import Controls from "./ControlPanel";
 
 const GameGrid = () => {
@@ -18,6 +18,12 @@ const GameGrid = () => {
   const [megaWilds, setMegaWilds] = useState([]);
   const [freeSpins, setFreeSpins] = useState(0);
 
+  const playSpecialSound = () => {
+    SpecialSound.play();
+    setTimeout(() => {
+      SpecialSound.stop();
+    }, 2000);
+  };
 
     // generate random symbols for the grid
     useEffect(() => {
@@ -92,7 +98,11 @@ const GameGrid = () => {
       };
     }, []);
 
-
+    useEffect(() => {
+      if (slots.flat().some(isSpecial)) {
+        playSpecialSound();
+      }
+    }, [slots]);
 
     return (
 <div className="h-screen relative flex items-center justify-center">
@@ -127,11 +137,10 @@ const GameGrid = () => {
           : isWild(symbol)
           ? wildAnimation
           : isSpecial(symbol)
-          ? specialAnimation
+          ? glowingAnimation 
           : isMegaWild(symbol)
           ? { scale: [1, 1.5, 1], transition: { duration: 0.6, repeat: Infinity } }
           : {};
-
         return (
           <motion.div
             key={index}
@@ -141,7 +150,9 @@ const GameGrid = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: isSpinning ? 0.8 : 0.5 }}
           >
-            <img src={`/images/${symbol}.png`} alt={symbol} className="w-full h-full object-contain" />
+            
+            <div className={`symbol ${isSpecial(symbol) ? "special-symbol" : ""}`}> <img src={`/images/${symbol}.png`}/> </div>
+
           </motion.div>
         );
       })}

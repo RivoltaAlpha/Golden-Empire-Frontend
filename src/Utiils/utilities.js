@@ -1,5 +1,4 @@
-import { toast } from "react-toastify";
-import { cascadeAnimation, jackpotAnimation, winAnimation } from "./Animations";
+
 
 export const regularSymbols = [
   "purple_eye", "green_totem", "rocks", "ace", "king", "queen", "jack", "ten", "scatter"
@@ -263,3 +262,9 @@ export const spinningEffect = (slots, setSlots, setCoins, setGlobalMultiplier, s
   setSlots(newGrid);
   setTimeout(() => checkForWins(newGrid, setCoins, setGlobalMultiplier, setJackpotTriggered, setFreeSpins), 500);
 }
+
+export const glowingAnimation = {
+  initial: { opacity: 0, scale: 0.8 },
+  animate: { opacity: 1, scale: [1, 1.2, 1], boxShadow: ["0px 0px 0px white", "0px 0px 20px yellow", "0px 0px 0px white"] },
+  transition: { duration: 1, repeat: 2 },
+};
