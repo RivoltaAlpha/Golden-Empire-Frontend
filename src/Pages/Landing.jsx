@@ -1,7 +1,5 @@
 import React from 'react';
-import { useEffect } from 'react';
-import { backgroundMusic } from "../Utiils/soundManager";
-
+import { onClickPlay } from "../Utiils/soundManager";
 
 const Landing = () => {
     const navigate = (path) => {
@@ -9,26 +7,13 @@ const Landing = () => {
     };
 
     const navigateToGame = () => {
-        navigate('/game');
+        // on clicking the start button, play the background music
+        onClickPlay.play(); 
+                // Navigate to the game page after the sound has finished playing
+        onClickPlay.once('end', () => {
+            navigate('/game');
+        });        
     };
-
-    useEffect(() => {
-      const handleUserInteraction = () => {
-        if (!backgroundMusic.playing()) {
-          backgroundMusic.play();
-        }
-        // Remove event listener after first interaction
-        window.removeEventListener("click", handleUserInteraction);
-      };
-
-      // Add a click event listener to start music on user interaction
-      window.addEventListener("click", handleUserInteraction);
-
-      return () => {
-        backgroundMusic.stop(); // Stop music when component unmounts (optional)
-        window.removeEventListener("click", handleUserInteraction);
-      };
-    }, []);
 
     return (
         <div className="h-screen absolute w-full bg-cover bg-center" style={{ backgroundImage: "url('/images/loadingpage.jpg')" }}>
@@ -37,6 +22,7 @@ const Landing = () => {
                     <img src="/images/GoldenEmpiregame.png" alt="title" className="w-96 mx-auto" />
                 <button
                     onClick={navigateToGame}
+                    
                     className="px-8 mx-auto py-4 bg-yellow-500 text-white text-xl font-bold rounded hover:bg-yellow-600 transition duration-300"
                 >
                     Start Game
