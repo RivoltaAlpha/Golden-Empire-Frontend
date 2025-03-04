@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Landing from './Pages/Landing';
 import Game from "./Pages/Game";
 import MusicProvider from "./components/MusicProvider";
+import GameOver from "./Pages/GameOver";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Landing />} />
                   <Route path="/game" element={<Game />} />
+                  <Route path="/game-over" element={<GameOver />} />
                </Routes>
             </div>
         </Router>
