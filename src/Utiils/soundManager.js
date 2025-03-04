@@ -57,3 +57,10 @@ export const onClickPlay = new Howl({
 	volume: 1.0,
 	onend: resumeBackgroundMusic, 
 });
+
+export const multiplierSound = new Howl({
+	src: ["/sounds/mega_swish.mp3"],
+	volume: 1.0,
+	loop: false,
+	onend: resumeBackgroundMusic, 
+});
