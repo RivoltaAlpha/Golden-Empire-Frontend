@@ -1,19 +1,5 @@
-import { Howl, Howler } from "howler";
+import { Howl } from "howler";
 
-// Background music (looped)
-export const backgroundMusic = new Howl({
-	src: ["/sounds/playingsound.mp3"],
-	volume: 0.5,
-	loop: true,
-});
-// Background music (looped)
-export const SpecialSound = new Howl({
-	src: ["/sounds/special.mp3"],
-	volume: 0.5,
-	loop: true,
-});
-
-// Function to pause and resume background music
 export const pauseBackgroundMusic = () => {
 	if (backgroundMusic.playing()) {
 		backgroundMusic.pause();
@@ -25,27 +11,49 @@ export const resumeBackgroundMusic = () => {
 		backgroundMusic.play();
 	}
 };
+export const backgroundMusic = new Howl({
+	src: ["/sounds/playingsound.mp3"],
+	volume: 0.5,
+	loop: true,
+});
 
-// Spin sound
+export const SpecialSound = new Howl({
+	src: ["/sounds/special.mp3"],
+	volume: 0.5,
+	loop: false,
+	onend: resumeBackgroundMusic, 
+});
+
+
 export const spinSound = new Howl({
 	src: ["/sounds/clicksound.mp3"],
 	volume: 1.0,
 	loop: false,
-	onend: resumeBackgroundMusic, // Resume background music after spin sound
+	onend: resumeBackgroundMusic, 
 });
 
-// Win sound
 export const winSound = new Howl({
 	src: ["/sounds/win.mp3"],
 	volume: 1.0,
 	loop: false,
-	onend: resumeBackgroundMusic, // Resume background music after win sound
+	onend: resumeBackgroundMusic, 
 });
 
-// Game over sound
 export const gameOverSound = new Howl({
-	src: ["/sounds/game-over.mp3"],
+	src: ["/sounds/Clickplay.mp3"],
+	volume: 1.0,
+	onend: resumeBackgroundMusic, 
+});
+
+export const jackpotSound = new Howl({
+	src: ["/sounds/loading_swish.mp3"],
 	volume: 1.0,
 	loop: false,
-	onend: resumeBackgroundMusic, // Resume background music after game over sound
+	onend: resumeBackgroundMusic, 
+});
+
+export const onClickPlay = new Howl({
+	src: ["/sounds/pharoah.mp3"],
+	volume: 1.0,
+	onend: resumeBackgroundMusic, 
 });
