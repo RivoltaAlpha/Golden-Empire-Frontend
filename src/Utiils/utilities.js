@@ -1,32 +1,54 @@
-
-
-export const regularSymbols = [
-  "purple_eye", "green_totem", "rocks", "ace", "king", "queen", "jack", "ten", "scatter"
-];
+import { backgroundMusic, gameOverSound, multiplierSound, SpecialSound, winSound } from "./soundManager";
 
 export const paytable = {
-  "mask": 2.0,
-  "eye": 1.6,
-  "totem": 1.2,
-  "rocks": 1.0,
-  "plant": 0.8,
-  "A": 0.6,
-  "K": 0.4,
-  "Q": 0.4,
-  "J": 0.2,
-  "10": 0.2
+  "redmask": 2.0,      // Most valuable
+  "purple_eye": 1.6,   
+  "green_totem": 1.2,  
+  "rocks": 1.0,        
+  "flower": 0.8,       
+  "ace": 0.6,         
+  "king": 0.4,        
+  "queen": 0.4,       
+  "jack": 0.2,        
+  "ten": 0.2,         
+  "wild": 2.0,         
+  "scatter": 0.0,     
+  "v-purpleye": 0.2,
+  "v-greengolemn": 0.2,
+  "v-scatter": 0.2,
+  "v-A": 0.2,
+  "v-K": 0.2,
+  "v-Q": 0.2,
+  "v-J": 0.2,
+  "v-10": 0.2,
+  "v-rock": 0.2,
+  "v-redmask": 0.2,
+  "v-flower": 0.2,
+  "wild0": 2,
+  "wild1": 2,
+  "wild2": 2,
+  "wild3": 2,
+  "wild4": 2,
 };
 
+export const regularSymbols = [
+  "purple_eye","green_totem","rocks", "ace", "king", "queen", "jack", "ten","redmask"
+];
+
+export const verticalSymbols = [
+  "v-purpleye","v-greengolemn", "v-scatter", "v-A", "v-K", "v-Q", "v-J", "v-10", "v-rock","v-redmask", "v-flower"
+];
+
 export const scatterSymbols = [
-  "hand", "head", "chest", "necklace", "elbow", "waist", "wrist"
+  "scatter", "v-scatter","wild3","wild4"
 ];
 
 export const specialSymbols = [
-  "scatter", "wild", "mega_wild", "super", "kingScatter", "v-scatter", "red_mask", "v-purpleye","jackpot", "v-scatter"
+  "scatter", "wild0", "wild1","wild2","wild3","wild4"
 ];
 
 export const wildSymbols = [
-  "wild", "mega_wild", "super", "kingScatter", "v-scatter", "v-purpleye", "jackpot", "v-scatter"
+  "wild0", "wild1","wild2","wild3","wild4",  
 ];
 
 export const winSymbols = ["win", "big", "mega"];
@@ -34,33 +56,15 @@ export const winSymbols = ["win", "big", "mega"];
 export const gridSize = { rows: 5, cols: 6 };
 
 export const getRandomSymbol = () => {
-  const symbolPool = Math.random() < 0.9 ? regularSymbols : [...specialSymbols, ...wildSymbols];
+  const symbolPool = Math.random() < 0.9 ? regularSymbols : [...verticalSymbols, ...wildSymbols];
   const randomSymbol = symbolPool[Math.floor(Math.random() * symbolPool.length)];
   return randomSymbol;
 };
 
-export const scatterAnimation = {
-  initial: { opacity: 1, scale: 1 },
-  animate: { opacity: 0, scale: 1.5, y: -200, transition: { duration: 0.8 } },
-};
-
-export const isScatter = (symbol) => scatterSymbols.includes(symbol);
-
-export const wildAnimation = {
-  animate: { scale: [1, 1.2, 1], opacity: [1, 0.7, 1] },
-  transition: { duration: 0.5, repeat: Infinity },
-};
-
+export const isMegaWild = (symbol) => [...wildSymbols].includes(symbol);
 export const isWild = (symbol) => wildSymbols.includes(symbol);
-export const isMegaWild = (symbol) => symbol === "mega";
-
-export const specialAnimation = {
-  initial: { opacity: 0, scale: 0.8 },
-  animate: { opacity: [0, 1, 0], scale: [0.8, 1.5, 0.8] },
-  transition: { duration: 1, repeat: 2 },
-};
-
 export const isSpecial = (symbol) => specialSymbols.includes(symbol);
+
 
 export const checkForWins = (
   slots,
@@ -102,7 +106,7 @@ export const checkForWins = (
       }
     }
 
-    if (scatterCount >= 4) {
+    if (scatterCount >= 6) {
       const additionalSpins = (scatterCount - 4) * 2;
       setFreeSpins((prev) => prev + 8 + additionalSpins);
     }
@@ -126,6 +130,7 @@ export const checkForWins = (
       }, 500);
     }
   }
+  return { hasWin, winAmount };
 };
 
 export const cascadeSymbols = (slots, setSlots, checkForWins) => {
@@ -161,67 +166,6 @@ export const reTriggerFreeSpins = (scatterCount, setFreeSpins) => {
   setFreeSpins((prev) => prev + extraSpins);
 };
 
-export const checkWins = (grid) => {
-  let totalWin = 0;
-
-  for (let row = 0; row < gridSize.rows; row++) {
-    let currentSymbol = grid[row][0];
-    let count = 1;
-
-    for (let col = 1; col < gridSize.cols; col++) {
-      const nextSymbol = grid[row][col];
-
-      if (nextSymbol === currentSymbol || nextSymbol === "wild") {
-        count++;
-      } else {
-        if (count >= 3) {
-          totalWin += count * 10;
-        }
-        currentSymbol = nextSymbol;
-        count = 1;
-      }
-    }
-    if (count >= 3) {
-      totalWin += count * 10;
-    }
-  }
-  return totalWin;
-};
-
-export const applyCascadingReels = (grid) => {
-  for (let col = 0; col < gridSize.cols; col++) {
-    let newCol = [];
-
-    for (let row = 0; row < gridSize.rows; row++) {
-      if (grid[row][col] !== "win") {
-        newCol.push(grid[row][col]);
-      }
-    }
-
-    while (newCol.length < gridSize.rows) {
-      newCol.unshift(getRandomSymbol());
-    }
-
-    for (let row = 0; row < gridSize.rows; row++) {
-      grid[row][col] = newCol[row];
-    }
-  }
-};
-
-export const checkForJackpot = (grid) => {
-  let jackpotCount = 0;
-
-  for (let row = 0; row < gridSize.rows; row++) {
-    for (let col = 0; col < gridSize.cols; col++) {
-      if (grid[row][col] === "jackpot") {
-        jackpotCount++;
-      }
-    }
-  }
-
-  return jackpotCount >= 3;
-};
-
 export const checkForMegaWild = (grid) => {
   let megaWildCount = 0;
 
@@ -234,20 +178,6 @@ export const checkForMegaWild = (grid) => {
   }
 
   return megaWildCount >= 3;
-}
-
-export const checkForWin = (grid) => {
-  let winCount = 0;
-
-  for (let row = 0; row < gridSize.rows; row++) {
-    for (let col = 0; col < gridSize.cols; col++) {
-      if (grid[row][col] === "win") {
-        winCount++;
-      }
-    }
-  }
-
-  return winCount >= 3;
 };
 
 export const spinningEffect = (slots, setSlots, setCoins, setGlobalMultiplier, setJackpotTriggered, setFreeSpins) => {
@@ -268,3 +198,42 @@ export const glowingAnimation = {
   animate: { opacity: 1, scale: [1, 1.2, 1], boxShadow: ["0px 0px 0px white", "0px 0px 20px yellow", "0px 0px 0px white"] },
   transition: { duration: 1, repeat: 2 },
 };
+
+
+  export const playSpecialSound = () => {
+    SpecialSound.play();
+    setTimeout(() => {
+      SpecialSound.stop();
+    }, 3000);
+  };
+
+  export const playJackpotSound = () => {
+    SpecialSound.play();
+    setTimeout(() => {
+      SpecialSound.stop();
+    }, 3000);
+  };
+
+  export const playWinSound = () => {
+    winSound.play();
+      setTimeout(() => {
+        winSound.stop();
+      }, 3000);
+    };
+
+  export const playGameOverSound = () => {
+    // stop background music when playing this
+    backgroundMusic.stop();
+    gameOverSound.play();
+    setTimeout(() => {
+      gameOverSound.stop();
+    }, 5000);
+
+  }
+
+  export const playMultiplierSound = () => {
+    multiplierSound.play();
+    setTimeout(() => {
+      multiplierSound.stop();
+    }, 3000);
+  }
