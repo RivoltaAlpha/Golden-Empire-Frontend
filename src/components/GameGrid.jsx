@@ -190,7 +190,7 @@ const GameGrid = () => {
         <AnimatePresence>{jackpotTriggered && <JackpotBanner />}</AnimatePresence>
 
       {/* Game Container */}
-      <div className="relative z-10 flex mt-80 flex-col items-center ">
+      <div className="relative z-10 flex mt-56 flex-col items-center ">
         {/* Top Horizontal Reel */}
         <div className="grid grid-cols-4 gap-2 w-[320px]">
           {topReel.map((symbol, index) => (
@@ -262,7 +262,7 @@ const GameGrid = () => {
 
       </div>
         {/* Controls */}
-        <div className="w-full flex flex-col sm:flex-row items-center justify-center mt-72 space-y-4 sm:space-y-0 sm:space-x-4">
+        <div className="w-full flex flex-col sm:flex-row items-center justify-center mt-64 space-y-4 sm:space-y-0 sm:space-x-4">
           <Controls
             coins={coins}
             betAmount={betAmount}
