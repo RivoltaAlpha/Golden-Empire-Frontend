@@ -2,8 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from "react";
-import { getRandomSymbol, checkForWins, isSpecial, isMegaWild, glowingAnimation, playSpecialSound, playJackpotSound, playWinSound, playGameOverSound, playMultiplierSound } from "../Utiils/utilities";
-import { winAnimation, multiplierImageAnimation} from "../Utiils/Animations";
+import { getRandomSymbol, checkForWins, isSpecial, isMegaWild,  playSpecialSound, playJackpotSound, playWinSound, playGameOverSound, playMultiplierSound } from "../Utiils/utilities";
+import { winAnimation,glowingAnimation, multiplierImageAnimation} from "../Utiils/Animations";
 import JackpotBanner from "./JackpotNotification";
 import Controls from "./ControlPanel";
 import { useNavigate } from "react-router-dom";
@@ -69,7 +69,7 @@ const GameGrid = () => {
   }, [freeSpins]);
 
   useEffect(() => {
-    if (megaWilds.length > 10) {
+    if (megaWilds.length > 6) {
       setShowMegaImage(true);
       setTimeout(() => {
         setShowMegaImage(false);
@@ -163,10 +163,11 @@ const GameGrid = () => {
       generateNewGrid();
       setTimeout(() => {
         setIsSpinning(false);
-        const {hasWin, winAmount} = checkForWins(slots, setCoins, setGlobalMultiplier, setJackpotTriggered, setMegaWilds, setStickyWilds, setFreeSpins, setFreeSpins);
+        const {hasWin, winAmount, totalWin} = checkForWins(slots, setCoins, setGlobalMultiplier, setJackpotTriggered, setMegaWilds, setStickyWilds, setFreeSpins, setFreeSpins);
         if (hasWin) {
-          playWinSound();
           toast.success(`You won ${winAmount} coins!`);
+          toast.info(`Total Win: ${totalWin} coins.`);
+          playWinSound();
           setShowWinImage(true);
           setTimeout(() => {
             setShowWinImage(false);
@@ -177,6 +178,7 @@ const GameGrid = () => {
   };
 
   return (
+    <>
     <div className="flex flex-col">
     <div className="relative flex items-center justify-center">
       <ToastContainer />     
@@ -188,7 +190,7 @@ const GameGrid = () => {
         <AnimatePresence>{jackpotTriggered && <JackpotBanner />}</AnimatePresence>
 
       {/* Game Container */}
-      <div className="relative z-10 flex mt-72 flex-col items-center ">
+      <div className="relative z-10 flex mt-80 flex-col items-center ">
         {/* Top Horizontal Reel */}
         <div className="grid grid-cols-4 gap-2 w-[320px]">
           {topReel.map((symbol, index) => (
@@ -202,49 +204,45 @@ const GameGrid = () => {
               <img 
                 src={`/images/${symbol}.png`} 
                 alt={symbol} 
-                className="w-full h-full object-contain" 
+                className="w-20 h-20 object-contain" 
               />
             </motion.div>
           ))}
         </div>
 
           {/* Main Slot Grid */}
-          <div className="grid grid-cols-6 auto-rows-[80px] w-full relative">
+          <div className="grid grid-cols-6 mt-4 ">
               {slots.map((column, colIndex) => (
                 column.map((item, itemIndex) => {
                   const { symbol, rowSpan, rowStart } = item;
                   
-                  if (isMegaWild(symbol) && itemIndex > 0 && colIndex > 0) {
-                    const isMainMegaWild = megaWilds.some(
-                      mw => mw.row === rowStart && mw.col === colIndex
-                    );
-                    if (!isMainMegaWild) return null; // Avoid duplicate rendering
-                 }
+      // Create a truly unique key based on multiple properties
+      const uniqueKey = `${colIndex}-${itemIndex}-${symbol}-${rowStart}`;
                  
                   const animation =  isSpecial(symbol)
                     ? glowingAnimation
                     : {};
                   
                   // Height based on row span
-                  const heightClass = rowSpan === 3 ? "h-[240px]" : "h-[60px]";
+                  const heightClass = rowSpan === 3 ? "h-[100px]" : "h-[50px]";
                   // ensure each item is placed in the correct grid position and no image overlaps the other or is hidden
                   
                   return (
                     <motion.div
-                      key={`${colIndex}-${itemIndex}`}
-                      className={`w-[80px] h-[80px] flex flex-col items-center justify-center bg-transparent`}
+                      key={uniqueKey}
+                      className={`flex flex-col items-center w-[80px] justify bg-transparent`}
                       style={{
                         gridColumn: colIndex + 1,
                         gridRow: `${rowStart + 1} / span ${rowSpan}`,
-                        zIndex: isSpecial(symbol) ? 2 : 1
+                        zIndex: isSpecial(symbol) ? 10 : 2
                       }}
                       {...animation}
                       initial={{ opacity: 0, y: -50 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: isSpinning ? 0.8 : 0.5, delay: colIndex * 0.1 }}
+                      transition={{ duration: isSpinning ? 0.8 : 0.5, delay: colIndex * 0.05 }}
                     >
                       <div className={`symbol ${isSpecial(symbol) ? "special-symbol" : ""} ${heightClass}`}>
-                        <img src={`/images/${symbol}.png`} alt={symbol} className="w-16 h-16"/>
+                        <img src={`/images/${symbol}.png`} alt={symbol} className="w-16"/>
                       </div>
                     </motion.div>
                   );
@@ -262,18 +260,19 @@ const GameGrid = () => {
          </div>
       </div>
 
+      </div>
         {/* Controls */}
-        <div className="w-full flex flex-col sm:flex-row items-center justify-center mt-40 space-y-4 sm:space-y-0 sm:space-x-4">
+        <div className="w-full flex flex-col sm:flex-row items-center justify-center mt-72 space-y-4 sm:space-y-0 sm:space-x-4">
           <Controls
             coins={coins}
             betAmount={betAmount}
             setBetAmount={setBetAmount}
             spin={spin}
             globalMultiplier={globalMultiplier}
-          />
+            />
         </div>
-      </div>
 
+            </>
       
   );
 };

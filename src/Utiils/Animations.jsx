@@ -39,3 +39,8 @@ export const showJackpotImage = {
   transition: { duration: 0.5, repeat: 2 },
 };
 
+export const glowingAnimation = {
+  initial: { opacity: 0, scale: 0.8 },
+  animate: { opacity: 1, scale: [1, 1.2, 1], boxShadow: ["0px 0px 0px white", "0px 0px 20px yellow", "0px 0px 0px white"] },
+  transition: { duration: 1, repeat: 2 },
+};
