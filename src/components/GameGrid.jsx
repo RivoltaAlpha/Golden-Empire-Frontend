@@ -83,51 +83,53 @@ const GameGrid = () => {
       navigate("/game-over");
     }
   }, [coins]);
-  
-  const createSymbolLayout = () => {
-    const layout = [];
-    const cols = 6; 
-    const rows = 5; 
 
-    for (let col = 0; col < cols; col++) {
-      const column = [];
-      let rowPosition = 0;
-      let hasThreeRowSymbol = false; 
-  
-      while (rowPosition < rows) {
-        let symbol;
-        let rowSpan = 1;
-  
-        // Ensure only one 3-row symbol per column
-        if (!hasThreeRowSymbol && rowPosition <= rows - 4 && Math.random() < 0.05) {
-          const threeRowSymbols = [
-            "wild0", "wild3", "wild4",
-            "v-purpleye", "v-greengolemn", "v-scatter", "v-A", "v-K", "v-Q", "v-J", "v-10", "v-rock",  "v-redmask", "v-flower"
-          ];
-          symbol = threeRowSymbols[Math.floor(Math.random() * threeRowSymbols.length)];
-          rowSpan = 3;
-          hasThreeRowSymbol = true; // Ensure no other 3-row symbols in this column
-        } 
-        else {
-          if (Math.random() < 0.1) {
-            const wildNormal = ["wild1", "wild2", "wild", "scatter"];
-            symbol = wildNormal[Math.floor(Math.random() * wildNormal.length)];
-            setMegaWilds((prev) => [...prev, { row: rowPosition, col }]);
-          } else {
-            symbol = getRandomSymbol();
-          }
-          rowSpan = 1; 
-        }
-  
-        column.push({ symbol, rowSpan, rowStart: rowPosition });
-        rowPosition += rowSpan; 
-      }
-  
-      layout.push(column);
-    }
-  
-    return layout;
-  };
+
+const createSymbolLayout = () => {
+	const layout = [];
+	const cols = 6;
+	const rows = 5;
+
+	for (let col = 0; col < cols; col++) {
+		const column = [];
+		let rowPosition = 0;
+		let hasThreeRowSymbol = false;
+
+		// Decide if this column should include a 3-row symbol (50% chance)
+		const includeThreeRowSymbol = Math.random() < 0.5;
+
+		if (includeThreeRowSymbol) {
+			// Pick a valid position for a 3-row symbol
+			const threeRowStart = Math.floor(Math.random() * (rows - 2));
+
+			// Get a proper 3-row symbol
+			const symbol = getRandomSymbol(3);
+
+			// Add the 3-row symbol
+			column.push({ symbol, rowSpan: 3, rowStart: threeRowStart });
+			hasThreeRowSymbol = true;
+
+			// Fill the remaining rows with 1-row symbols
+			for (let i = 0; i < rows; i++) {
+				if (i < threeRowStart || i >= threeRowStart + 3) {
+					const normalSymbol = getRandomSymbol();
+					column.push({ symbol: normalSymbol, rowSpan: 1, rowStart: i });
+				}
+			}
+		} else {
+			// No 3-row symbol, fill column with 5 single-row symbols
+			for (let i = 0; i < rows; i++) {
+				const normalSymbol = getRandomSymbol();
+				column.push({ symbol: normalSymbol, rowSpan: 1, rowStart: i });
+			}
+		}
+
+		layout.push(column);
+	}
+
+	return layout;
+};
+
 
   const generateNewGrid = () => {
     setMegaWilds([]);
@@ -178,110 +180,135 @@ const GameGrid = () => {
   };
 
   return (
-    <>
-    <div className="flex flex-col">
-    <div className="relative flex items-center justify-center">
-      <ToastContainer />     
+		<>
+			<div className="flex flex-col">
+				<div className="relative flex items-center justify-center">
+					<ToastContainer />
 
-      <div className="h-screen absolute inset-0 bg-no-repeat bg-center" 
-           style={{ backgroundImage: "url('/images/background.png')" }}>
-      </div>
+					<div
+						className="h-screen absolute inset-0 bg-no-repeat bg-center"
+						style={{ backgroundImage: "url('/images/background.png')" }}
+					>
+						<AnimatePresence>
+							{jackpotTriggered && <JackpotBanner />}
+						</AnimatePresence>
 
-        <AnimatePresence>{jackpotTriggered && <JackpotBanner />}</AnimatePresence>
+						{/* Game Container */}
+						<div className="relative z-10 flex mt-32 flex-col items-center  gap-[8px] h-[450px] ">
+							{/* Top Horizontal Reel */}
+              {/* These symbols should be normal and not vertical symbols */}
+							<div className="grid grid-cols-4 gap-2 w-[320px]">
+								{topReel.map((symbol, index) => (
+									<motion.div
+										key={index}
+										className="w-[80px] h-[80px] flex items-center justify-center"
+										initial={{ opacity: 0, y: -50 }}
+										animate={{ opacity: 1, y: 0 }}
+										transition={{ duration: isSpinning ? 0.8 : 0.5 }}
+									>
+										<img
+											src={`/images/${symbol}.png`}
+											alt={symbol}
+											className="w-20 h-16 object-contain"
+										/>
+									</motion.div>
+								))}
+							</div>
 
-      {/* Game Container */}
-      <div className="relative z-10 flex mt-56 flex-col items-center ">
-        {/* Top Horizontal Reel */}
-        <div className="grid grid-cols-4 gap-2 w-[320px]">
-          {topReel.map((symbol, index) => (
-            <motion.div 
-              key={index} 
-              className="w-[80px] h-[80px] flex items-center justify-center"
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: isSpinning ? 0.8 : 0.5 }}
-            >
-              <img 
-                src={`/images/${symbol}.png`} 
-                alt={symbol} 
-                className="w-20 h-20 object-contain" 
-              />
-            </motion.div>
-          ))}
-        </div>
+							{/* Main Slot Grid */}
+							<div className="grid grid-cols-6 w-[500px]  ">
+								{slots.map((column, colIndex) =>
+									column.map((item, itemIndex) => {
+										const { symbol, rowSpan, rowStart } = item;
 
-          {/* Main Slot Grid */}
-          <div className="grid grid-cols-6 mt-4 ">
-              {slots.map((column, colIndex) => (
-                column.map((item, itemIndex) => {
-                  const { symbol, rowSpan, rowStart } = item;
-                  
-      // Create a truly unique key based on multiple properties
-      const uniqueKey = `${colIndex}-${itemIndex}-${symbol}-${rowStart}`;
-                 
-                  const animation =  isSpecial(symbol)
-                    ? glowingAnimation
-                    : {};
-                  
-                  // Height based on row span
-                  const heightClass = rowSpan === 3 ? "h-[100px]" : "h-[50px]";
-                  // ensure each item is placed in the correct grid position and no image overlaps the other or is hidden
-                  
-                  return (
-                    <motion.div
-                      key={uniqueKey}
-                      className={`flex flex-col items-center w-[80px] justify bg-transparent`}
-                      style={{
-                        gridColumn: colIndex + 1,
-                        gridRow: `${rowStart + 1} / span ${rowSpan}`,
-                        zIndex: isSpecial(symbol) ? 10 : 2
-                      }}
-                      {...animation}
-                      initial={{ opacity: 0, y: -50 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: isSpinning ? 0.8 : 0.5, delay: colIndex * 0.05 }}
-                    >
-                      <div className={`symbol ${isSpecial(symbol) ? "special-symbol" : ""} ${heightClass}`}>
-                        <img src={`/images/${symbol}.png`} alt={symbol} className="w-16"/>
-                      </div>
-                    </motion.div>
-                  );
-                })
-              ))}
-          </div>
+										// Create a truly unique key based on multiple properties
+										const uniqueKey = `${colIndex}-${itemIndex}-${symbol}-${rowStart}`;
 
-          {/* Animated Overlays */}
-          <AnimatePresence>
-            {showMultiplierImage && <AnimatedOverlay imgSrc="/images/super.png" animation={multiplierImageAnimation} />}
-            {showJackpotImage && <AnimatedOverlay imgSrc="/images/jackpot.png" animation={jackpotAnimation} />}
-            {showMegaImage && <AnimatedOverlay imgSrc="/images/mega.png" animation={multiplierImageAnimation} />}
-            {showWinImage && <AnimatedOverlay imgSrc="/images/win.png" animation={winAnimation} />}
-          </AnimatePresence>               
-         </div>
-      </div>
+										const animation = isSpecial(symbol) ? glowingAnimation : {};
 
-      </div>
-        {/* Controls */}
-        <div className="w-full flex flex-col sm:flex-row items-center justify-center mt-64 space-y-4 sm:space-y-0 sm:space-x-4">
-          <Controls
-            coins={coins}
-            betAmount={betAmount}
-            setBetAmount={setBetAmount}
-            spin={spin}
-            globalMultiplier={globalMultiplier}
-            />
-        </div>
+										// ensure each item is placed in the correct grid position and no image overlaps the other or is hidden
+										// Height based on row span
+										const heightClass =
+											rowSpan === 3 ? "h-[]" : "h-[50px]";
 
-            </>
-      
-  );
+										return (
+											<motion.div
+												key={uniqueKey}
+												className={``}
+												style={{
+													gridColumn: colIndex + 1,
+													gridRow: `${rowStart + 1} / span ${rowSpan}`,
+												}}
+												{...animation}
+												initial={{ opacity: 0, y: -50 }}
+												animate={{ opacity: 1, y: 0 }}
+												transition={{
+													duration: isSpinning ? 0.8 : 0.5,
+													delay: colIndex * 0.05,
+												}}
+											>
+												<div
+													className={`symbol ${
+														isSpecial(symbol) ? "special-symbol" : ""
+													} ${heightClass}`}
+												>
+													<img src={`/images/${symbol}.png`} alt={symbol} />
+												</div>
+											</motion.div>
+										);
+									})
+								)}
+							</div>
+						</div>
+						{/* Animated Overlays */}
+						<AnimatePresence>
+							{showMultiplierImage && (
+								<AnimatedOverlay
+									imgSrc="/images/super.png"
+									animation={multiplierImageAnimation}
+								/>
+							)}
+							{showJackpotImage && (
+								<AnimatedOverlay
+									imgSrc="/images/jackpot.png"
+									animation={jackpotAnimation}
+								/>
+							)}
+							{showMegaImage && (
+								<AnimatedOverlay
+									imgSrc="/images/mega.png"
+									animation={multiplierImageAnimation}
+								/>
+							)}
+							{showWinImage && (
+								<AnimatedOverlay
+									imgSrc="/images/win.png"
+									animation={winAnimation}
+								/>
+							)}
+						</AnimatePresence>
+			<div className="relative w-full flex flex-col sm:flex-row items-center justify-center mt-24 space-y-4 sm:space-y-0 sm:space-x-4">
+				<Controls
+					coins={coins}
+					betAmount={betAmount}
+					setBetAmount={setBetAmount}
+					spin={spin}
+					globalMultiplier={globalMultiplier}
+				/>
+			</div>
+					</div>
+				</div>
+			</div>
+			{/* Controls */}
+		</>
+	);
 };
 
 // Animated Overlay Component
 const AnimatedOverlay = ({ imgSrc, animation }) => (
   <>
     <motion.div className="fixed inset-0 bg-black bg-opacity-50 z-40" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }} />
-    <motion.img src={imgSrc} alt="Overlay Image" className="fixed top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50" initial="initial" animate="animate" exit={{ opacity: 0 }} transition="transition" {...animation} />
+    <motion.img src={imgSrc} alt="Overlay Image" className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50" initial="initial" animate="animate" exit={{ opacity: 0 }} transition="transition" {...animation} />
   </>
 );
 

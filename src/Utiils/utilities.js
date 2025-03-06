@@ -55,10 +55,28 @@ export const winSymbols = ["win", "big", "mega"];
 
 export const gridSize = { rows: 5, cols: 6 };
 
-export const getRandomSymbol = () => {
-  const symbolPool = Math.random() < 0.9 ? regularSymbols : [...verticalSymbols, ...wildSymbols];
-  const randomSymbol = symbolPool[Math.floor(Math.random() * symbolPool.length)];
-  return randomSymbol;
+// export const getRandomSymbol = () => {
+//   const symbolPool = Math.random() < 0.9 ? regularSymbols : [...verticalSymbols, ...wildSymbols];
+//   const randomSymbol = symbolPool[Math.floor(Math.random() * symbolPool.length)];
+//   return randomSymbol;
+// };
+
+export const getRandomSymbol = (rowSpan = 1) => {
+	if (rowSpan === 3) {
+		// Ensure we pick a proper 3-row spanning symbol
+		const threeRowSymbols = [
+			...verticalSymbols, // Vertical symbols should only be used for 3-row spans
+			...wildSymbols, // Allow some wilds to be vertical
+		];
+		return threeRowSymbols[Math.floor(Math.random() * threeRowSymbols.length)];
+	} else {
+		// Pick a 1-row symbol from regular or special pool
+		const symbolPool =
+			Math.random() < 0.8
+				? regularSymbols
+				: [...wildSymbols, ...scatterSymbols];
+		return symbolPool[Math.floor(Math.random() * symbolPool.length)];
+	}
 };
 
 export const isMegaWild = (symbol) => [...wildSymbols].includes(symbol);
