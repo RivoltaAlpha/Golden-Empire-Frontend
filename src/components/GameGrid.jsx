@@ -186,7 +186,7 @@ const GameGrid = () => {
 						</AnimatePresence>
 
 						{/* Game Container */}
-						<div className="relative z-10 flex flex-col items-center justify-center gap-[8px] h-[600px] ">
+						<div className="relative z-10 flex flex-col items-center mt-10 justify-center gap-[8px] h-[600px] ">
 							{/* Top Horizontal Reel */}
 							<div className="grid grid-cols-4 w-[320px]">
 								{topReel.map((symbol, index) => (
