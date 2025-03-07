@@ -31,8 +31,8 @@ const Controls = ({
 	};
 
 	return (
-		<div className="bg-black/30 backdrop-blur-sm   p-2 my-2 rounded-xl lg:flex flex-col items-center lg:justify-between absolute lg:w-full mt-20 ">
-			<div className="flex items-center gap-10">
+		<div className="bg-black/50 backdrop-blur-sm my-2 p-2 rounded-xl flex flex-col items-center  absolute lg:w-auto  ">
+			<div className="flex items-center justify-between gap-10">
 				<div className="text-lg font-bold text-yellow-400">
 					Global Multiplier: x{globalMultiplier}
 				</div>
@@ -82,7 +82,7 @@ const Controls = ({
 					whileTap={{ scale: 0.9 }}
 					onClick={handleSpin} // Use handleSpin to play sound + trigger spin
 				>
-					<div className="relative w-[70px] h-[70px] group">
+					<div className="relative mb-4 w-[70px] h-[70px] group">
 						{/* Background Image */}
 						<img
 							src="/images/spin.webp"
