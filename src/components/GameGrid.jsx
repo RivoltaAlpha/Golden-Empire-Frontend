@@ -194,7 +194,7 @@ const GameGrid = () => {
 						{/* Game Container */}
 						<div className="relative z-10 flex flex-col items-center justify-center gap-[8px] "
 							 style={{
-								width: "1200px",  // Fixed width
+								width: "auto",  // Fixed width
 								height: "600px", // Fixed height
 								transform: "scale(1)",  // Prevents zoom changes
 								overflow: "hidden",
