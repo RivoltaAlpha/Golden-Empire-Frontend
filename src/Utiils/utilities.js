@@ -32,11 +32,11 @@ export const paytable = {
 };
 
 export const regularSymbols = [
-  "purple_eye","green_totem","rocks", "ace", "king", "queen", "jack", "ten","redmask","flower","scatter"
+  "purple_eye","green_totem","rocks", "ace", "king", "queen", "jack", "ten","redmask","scatter"
 ];
 
 export const verticalSymbols = [
-  "v-purpleye","v-greengolemn", "v-A", "v-K", "v-Q", "v-J", "v-10", "v-rock","v-redmask", "v-flower"
+  "v-purpleye","v-greengolemn", "v-A", "v-K", "v-Q", "v-J", "v-10", "v-rock","v-redmask", "v-flower","flower",
 ];
 
 export const scatterSymbols = [
@@ -55,11 +55,10 @@ export const winSymbols = ["win", "big", "mega"];
 
 export const gridSize = { rows: 5, cols: 6 };
 
-// export const getRandomSymbol = () => {
-//   const symbolPool = Math.random() < 0.9 ? regularSymbols : [...verticalSymbols, ...wildSymbols];
-//   const randomSymbol = symbolPool[Math.floor(Math.random() * symbolPool.length)];
-//   return randomSymbol;
-// };
+export const TopRandomSymbol = () => {
+  const randomSymbol = regularSymbols[Math.floor(Math.random() * regularSymbols.length)];
+  return randomSymbol;
+};
 
 export const getRandomSymbol = (rowSpan = 1) => {
 	if (rowSpan === 3) {
@@ -72,7 +71,7 @@ export const getRandomSymbol = (rowSpan = 1) => {
 	} else {
 		// Pick a 1-row symbol from regular or special pool
 		const symbolPool =
-			Math.random() < 0.8
+			Math.random() < 0.9
 				? regularSymbols
 				: [...wildSymbols, ...scatterSymbols];
 		return symbolPool[Math.floor(Math.random() * symbolPool.length)];

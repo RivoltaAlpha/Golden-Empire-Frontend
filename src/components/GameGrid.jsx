@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from "react";
-import { getRandomSymbol, checkForWins, isSpecial, isMegaWild,  playSpecialSound, playJackpotSound, playWinSound, playGameOverSound, playMultiplierSound } from "../Utiils/utilities";
+import { getRandomSymbol, checkForWins, isSpecial, isMegaWild,  playSpecialSound, playJackpotSound, playWinSound, playGameOverSound, playMultiplierSound, TopRandomSymbol } from "../Utiils/utilities";
 import { winAnimation,glowingAnimation, multiplierImageAnimation} from "../Utiils/Animations";
 import JackpotBanner from "./JackpotNotification";
 import Controls from "./ControlPanel";
@@ -19,7 +19,7 @@ const GameGrid = () => {
   const [stickyWilds, setStickyWilds] = useState({});
   const [megaWilds, setMegaWilds] = useState([]);
   const [freeSpins, setFreeSpins] = useState(0);
-  const [topReel, setTopReel] = useState(Array(4).fill(null).map(getRandomSymbol));
+  const [topReel, setTopReel] = useState(Array(4).fill(null).map(TopRandomSymbol));
   const [showMultiplierImage, setShowMultiplierImage] = useState(false);
   const [showJackpotImage, setShowJackpotImage] = useState(false);
   const [showWinImage,setShowWinImage] = useState(false);
@@ -96,7 +96,7 @@ const createSymbolLayout = () => {
 		let hasThreeRowSymbol = false;
 
 		// Decide if this column should include a 3-row symbol (50% chance)
-		const includeThreeRowSymbol = Math.random() < 0.5;
+		const includeThreeRowSymbol = Math.random() < 0.2;
 
 		if (includeThreeRowSymbol) {
 			// Pick a valid position for a 3-row symbol
@@ -135,7 +135,7 @@ const createSymbolLayout = () => {
     setMegaWilds([]);
     const newLayout = createSymbolLayout();
     setSlots(newLayout);
-    setTopReel(Array(4).fill(null).map(getRandomSymbol));
+    setTopReel(Array(4).fill(null).map(TopRandomSymbol));
   };
 
   const spin = () => {
@@ -194,9 +194,8 @@ const createSymbolLayout = () => {
 						</AnimatePresence>
 
 						{/* Game Container */}
-						<div className="relative z-10 flex mt-32 flex-col items-center  gap-[8px] h-[450px] ">
+						<div className="relative z-10 flex mt-12 flex-col items-center  gap-[8px] h-[450px] ">
 							{/* Top Horizontal Reel */}
-              {/* These symbols should be normal and not vertical symbols */}
 							<div className="grid grid-cols-4 gap-2 w-[320px]">
 								{topReel.map((symbol, index) => (
 									<motion.div
@@ -287,15 +286,15 @@ const createSymbolLayout = () => {
 								/>
 							)}
 						</AnimatePresence>
-			<div className="relative w-full flex flex-col sm:flex-row items-center justify-center mt-24 space-y-4 sm:space-y-0 sm:space-x-4">
-				<Controls
-					coins={coins}
-					betAmount={betAmount}
-					setBetAmount={setBetAmount}
-					spin={spin}
-					globalMultiplier={globalMultiplier}
-				/>
-			</div>
+						<div className="relative w-full flex flex-col sm:flex-row items-center justify-center mt-24 space-y-4 sm:space-y-0 sm:space-x-4">
+							<Controls
+								coins={coins}
+								betAmount={betAmount}
+								setBetAmount={setBetAmount}
+								spin={spin}
+								globalMultiplier={globalMultiplier}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
