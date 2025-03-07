@@ -24,6 +24,7 @@ const GameGrid = () => {
   const [showJackpotImage, setShowJackpotImage] = useState(false);
   const [showWinImage,setShowWinImage] = useState(false);
   const [showMegaImage,setShowMegaImage] = useState(false);
+  const [ways, setWays] = useState(generateWays());
   const navigate = useNavigate();
 
 
@@ -130,6 +131,11 @@ const GameGrid = () => {
     setTopReel(Array(4).fill(null).map(TopRandomSymbol));
   };
 
+	// Function to generate a random number (4 to 5 digits)
+	function generateWays() {
+		return Math.floor(Math.random() * (99999 - 1000 + 1)) + 1000;
+	}
+
   const spin = () => {
     if (isSpinning) return;
     
@@ -150,6 +156,8 @@ const GameGrid = () => {
       setFreeSpins(prev => prev - 1);
       toast.info(`Free Spin! ${freeSpins - 1} left.`);
     }
+
+	setWays(generateWays());
 
     setIsSpinning(true);
 
@@ -190,6 +198,19 @@ const GameGrid = () => {
 						<AnimatePresence>
 							{jackpotTriggered && <JackpotBanner />}
 						</AnimatePresence>
+
+						<div className="relative grid grid-cols-3 px-80 mt-20">
+							<div className="text-yellow-400 font-bold text-lg ml-32 py-1 rounded-md shadow-md text-center ">
+								{ways} WAYS
+							</div>
+							<div className="col-span-2 flex justify-center overflow-hidden h-10 pb-2 mr-10 ">
+								<img
+									src="/images/logo.png"
+									alt="Golden Empire"
+									className="w-[250px] h-auto object-contain"
+								/>
+							</div>
+						</div>
 
 						{/* Game Container */}
 						<div className="relative z-10 flex flex-col items-center justify-center gap-[8px] "
