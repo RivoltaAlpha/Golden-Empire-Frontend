@@ -173,20 +173,33 @@ const GameGrid = () => {
 
   return (
 		<>
-			<div className="flex flex-col">
+			<div className="flex flex-col"
+>
 				<div className="relative flex items-center justify-center ">
 					<ToastContainer />
 
 					<div
 						className="absolute inset-0 w-full min-h-screen bg-no-repeat bg-center"
-						style={{ backgroundImage: "url('/images/background.png')" }}
+						style={{ backgroundImage: "url('/images/background.png')", 
+							backgroundAttachment: "fixed",
+						}
+
+					}
+						
 					>
 						<AnimatePresence>
 							{jackpotTriggered && <JackpotBanner />}
 						</AnimatePresence>
 
 						{/* Game Container */}
-						<div className="relative z-10 flex flex-col items-center mt-10 justify-center gap-[8px] h-[600px] ">
+						<div className="relative z-10 flex flex-col items-center mt-10 justify-center gap-[8px] "
+							 style={{
+								width: "1450px",  // Fixed width
+								height: "600px", // Fixed height
+								transform: "scale(1)",  // Prevents zoom changes
+								overflow: "hidden",
+							  }}
+						>
 							{/* Top Horizontal Reel */}
 							<div className="grid grid-cols-4 w-[320px]">
 								{topReel.map((symbol, index) => (
