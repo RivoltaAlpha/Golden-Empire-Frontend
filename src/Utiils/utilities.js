@@ -36,7 +36,7 @@ export const regularSymbols = [
 ];
 
 export const topSymbols = [
-   "ace", "king", "queen", "jack", "ten","redmask","scatter", "wild"
+   "ace", "king", "queen", "jack", "ten","redmask","scatter", "wild", "scatter"
 ];
 
 export const verticalSymbols = [
@@ -48,7 +48,7 @@ export const span1Symbols = [
 ];
 
 export const span3Symbols = [
-  "wild","wild3","wild4", "v-scatter","v-rock","v-redmask", "v-flower", "v-purpleye","v-greengolemn", "v-A", "v-K", "v-Q", "v-J", "v-10"
+  "wild0","wild3","wild4", "v-scatter","v-rock","v-redmask", "v-flower", "v-purpleye","v-greengolemn", "v-A", "v-K", "v-Q", "v-J", "v-10"
 ];
 
 export const span2Symbols = [
@@ -81,23 +81,14 @@ export const TopRandomSymbol = () => {
 
 export const getRandomSymbol = (rowSpan = 1) => {
 	if (rowSpan === 3) {
-		const threeRowSymbols = [
-			...span3Symbols];
-		return threeRowSymbols[Math.floor(Math.random() * threeRowSymbols.length)];
+		return span3Symbols[Math.floor(Math.random() * span3Symbols.length)];
 	}
   else if (rowSpan === 2) {
-    const twoRowSymbols = [
-      ...span2Symbols, 
-    ];
-    return twoRowSymbols[Math.floor(Math.random() * twoRowSymbols.length)];
+    return span2Symbols[Math.floor(Math.random() * span2Symbols.length)];
   }
   else {
 		// Pick a 1-row symbol from regular or special pool
-		const symbolPool =
-			Math.random() < 0.8
-				? regularSymbols
-				: [...smallSpecialSymbols];
-		return symbolPool[Math.floor(Math.random() * symbolPool.length)];
+		return regularSymbols[Math.floor(Math.random() * regularSymbols.length)];
 	}
 };
 

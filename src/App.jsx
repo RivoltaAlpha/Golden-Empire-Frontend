@@ -10,7 +10,7 @@ const App = () => {
   return (
     <MusicProvider>
           <Router>
-              <div className="absolute inset-0 bg-cover bg-center min-h-screen"  style={{
+              <div className="absolute inset-0 bg-cover bg-center min-h-screen overflow-y"  style={{
                 backgroundImage:"url('/images/bgimage.jpg')",
                 overflow: "hidden",
                 backgroundSize: "cover",

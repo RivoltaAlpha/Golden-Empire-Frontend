@@ -178,7 +178,7 @@ const GameGrid = () => {
 					<ToastContainer />
 
 					<div
-						className="h-screen absolute inset-0 bg-no-repeat bg-center"
+						className="absolute inset-0 w-full min-h-screen bg-no-repeat bg-center"
 						style={{ backgroundImage: "url('/images/background.png')" }}
 					>
 						<AnimatePresence>
@@ -186,7 +186,7 @@ const GameGrid = () => {
 						</AnimatePresence>
 
 						{/* Game Container */}
-						<div className="relative z-10 flex mt-12 flex-col items-center  gap-[8px] h-[450px] ">
+						<div className="relative z-10 flex flex-col items-center  gap-[8px] h-[450px] ">
 							{/* Top Horizontal Reel */}
 							<div className="grid grid-cols-4 w-[320px]">
 								{topReel.map((symbol, index) => (
@@ -207,8 +207,8 @@ const GameGrid = () => {
 							</div>
 
 							{/* Main Slot Grid */}
-							<div className="grid grid-cols-6  grid-rows-5 gap-1 w-[500px] h-[300px]">
-								{slots.map((column, colIndex) =>
+							<div className="grid grid-cols-6 gap-1 w-full max-w-[90%] sm:max-w-[600px] h-auto">
+							{slots.map((column, colIndex) =>
 									column.map((item, itemIndex) => {
 										const { symbol, rowSpan, rowStart } = item;
 										const uniqueKey = `${colIndex}-${itemIndex}-${symbol}-${rowStart}`;
@@ -216,15 +216,14 @@ const GameGrid = () => {
 
 										// Define proper height based on rowSpan
 										const heightStyle = 
-											rowSpan === 3 ? "240px" : 
-											rowSpan === 2 ? "160px" : 
+											rowSpan === 3 ? "140px" : 
+											rowSpan === 2 ? "100px" : 
 											"60px";
 
 										return (
 											<motion.div
 												key={uniqueKey}
-												className={``}
-												style={{
+												className={`w-full ${heightStyle} flex items-center justify-center`}												style={{
 													gridColumn: colIndex + 1,
 													gridRow: `${rowStart + 1} / span ${rowSpan}`,
 													height: heightStyle,
@@ -277,7 +276,7 @@ const GameGrid = () => {
 								/>
 							)}
 						</AnimatePresence>
-						<div className="relative w-full flex flex-col sm:flex-row items-center justify-center mt-24 space-y-4 sm:space-y-0 sm:space-x-4">
+						<div className="relative w-full flex flex-col sm:flex-row items-center justify-center lg:mt-28  mt-20 space-y-4 sm:space-y-0 sm:space-x-4">
 							<Controls
 								coins={coins}
 								betAmount={betAmount}
@@ -289,7 +288,6 @@ const GameGrid = () => {
 					</div>
 				</div>
 			</div>
-			{/* Controls */}
 		</>
 	);
 };
@@ -298,7 +296,7 @@ const GameGrid = () => {
 const AnimatedOverlay = ({ imgSrc, animation }) => (
   <>
     <motion.div className="fixed inset-0 bg-black bg-opacity-50 z-40" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }} />
-    <motion.img src={imgSrc} alt="Overlay Image" className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50" initial="initial" animate="animate" exit={{ opacity: 0 }} transition="transition" {...animation} />
+    <motion.img src={imgSrc} alt="Overlay Image" className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-4/5 sm:w-1/2 md:w-1/3" initial="initial" animate="animate" exit={{ opacity: 0 }} transition="transition" {...animation} />
   </>
 );
 
