@@ -35,8 +35,24 @@ export const regularSymbols = [
   "purple_eye","green_totem","rocks", "ace", "king", "queen", "jack", "ten","redmask","scatter"
 ];
 
+export const topSymbols = [
+   "ace", "king", "queen", "jack", "ten","redmask","scatter", "wild"
+];
+
 export const verticalSymbols = [
   "v-purpleye","v-greengolemn", "v-A", "v-K", "v-Q", "v-J", "v-10", "v-rock","v-redmask", "v-flower","flower",
+];
+
+export const span1Symbols = [
+  "green_totem","ace", "king", "queen", "jack", "ten","wild","scatter"
+];
+
+export const span3Symbols = [
+  "wild","wild3","wild4", "v-scatter","v-rock","v-redmask", "v-flower", "v-purpleye","v-greengolemn", "v-A", "v-K", "v-Q", "v-J", "v-10"
+];
+
+export const span2Symbols = [
+  "purple_eye","redmask","rocks","wild1","wild2", "flower"
 ];
 
 export const scatterSymbols = [
@@ -47,6 +63,9 @@ export const specialSymbols = [
   "scatter", "wild0", "wild1","wild2","wild3","wild4", "v-scatter","wild"
 ];
 
+export const largeSpecialSymbols = ["wild0","wild3","wild4", "v-scatter"];
+export const smallSpecialSymbols = ["wild1","wild2"];
+
 export const wildSymbols = [
   "wild0", "wild1","wild2","wild3","wild4",  
 ];
@@ -56,24 +75,28 @@ export const winSymbols = ["win", "big", "mega"];
 export const gridSize = { rows: 5, cols: 6 };
 
 export const TopRandomSymbol = () => {
-  const randomSymbol = regularSymbols[Math.floor(Math.random() * regularSymbols.length)];
+  const randomSymbol = topSymbols[Math.floor(Math.random() * topSymbols.length)];
   return randomSymbol;
 };
 
 export const getRandomSymbol = (rowSpan = 1) => {
 	if (rowSpan === 3) {
-		// Ensure we pick a proper 3-row spanning symbol
 		const threeRowSymbols = [
-			...verticalSymbols, // Vertical symbols should only be used for 3-row spans
-			...wildSymbols, // Allow some wilds to be vertical
-		];
+			...span3Symbols];
 		return threeRowSymbols[Math.floor(Math.random() * threeRowSymbols.length)];
-	} else {
+	}
+  else if (rowSpan === 2) {
+    const twoRowSymbols = [
+      ...span2Symbols, 
+    ];
+    return twoRowSymbols[Math.floor(Math.random() * twoRowSymbols.length)];
+  }
+  else {
 		// Pick a 1-row symbol from regular or special pool
 		const symbolPool =
-			Math.random() < 0.9
+			Math.random() < 0.8
 				? regularSymbols
-				: [...wildSymbols, ...scatterSymbols];
+				: [...smallSpecialSymbols];
 		return symbolPool[Math.floor(Math.random() * symbolPool.length)];
 	}
 };

@@ -85,7 +85,7 @@ const GameGrid = () => {
   }, [coins]);
 
 
-const createSymbolLayout = () => {
+  const createSymbolLayout = () => {
 	const layout = [];
 	const cols = 6;
 	const rows = 5;
@@ -95,33 +95,26 @@ const createSymbolLayout = () => {
 		let rowPosition = 0;
 		let hasThreeRowSymbol = false;
 
-		// Decide if this column should include a 3-row symbol (50% chance)
-		const includeThreeRowSymbol = Math.random() < 0.2;
-
-		if (includeThreeRowSymbol) {
-			// Pick a valid position for a 3-row symbol
-			const threeRowStart = Math.floor(Math.random() * (rows - 2));
-
-			// Get a proper 3-row symbol
+		// Try to place a 3-row symbol first (20% chance)
+		if (Math.random() < 0.2 && rowPosition <= rows - 3) {
 			const symbol = getRandomSymbol(3);
+			column.push({ symbol, rowSpan: 3, rowStart: rowPosition });
+			rowPosition += 3;
+			hasThreeRowSymbol = true; // Prevents adding a 2-row symbol later
+		}
 
-			// Add the 3-row symbol
-			column.push({ symbol, rowSpan: 3, rowStart: threeRowStart });
-			hasThreeRowSymbol = true;
+		// If no 3-row symbol was placed, try to place a 2-row symbol (15% chance)
+		if (!hasThreeRowSymbol && Math.random() < 0.15 && rowPosition <= rows - 2) {
+			const symbol = getRandomSymbol(2);
+			column.push({ symbol, rowSpan: 2, rowStart: rowPosition });
+			rowPosition += 2;
+		}
 
-			// Fill the remaining rows with 1-row symbols
-			for (let i = 0; i < rows; i++) {
-				if (i < threeRowStart || i >= threeRowStart + 3) {
-					const normalSymbol = getRandomSymbol();
-					column.push({ symbol: normalSymbol, rowSpan: 1, rowStart: i });
-				}
-			}
-		} else {
-			// No 3-row symbol, fill column with 5 single-row symbols
-			for (let i = 0; i < rows; i++) {
-				const normalSymbol = getRandomSymbol();
-				column.push({ symbol: normalSymbol, rowSpan: 1, rowStart: i });
-			}
+		// Fill remaining space with 1-row symbols
+		while (rowPosition < rows) {
+			const normalSymbol = getRandomSymbol();
+			column.push({ symbol: normalSymbol, rowSpan: 1, rowStart: rowPosition });
+			rowPosition += 1;
 		}
 
 		layout.push(column);
@@ -129,7 +122,6 @@ const createSymbolLayout = () => {
 
 	return layout;
 };
-
 
   const generateNewGrid = () => {
     setMegaWilds([]);
@@ -196,7 +188,7 @@ const createSymbolLayout = () => {
 						{/* Game Container */}
 						<div className="relative z-10 flex mt-12 flex-col items-center  gap-[8px] h-[450px] ">
 							{/* Top Horizontal Reel */}
-							<div className="grid grid-cols-4 gap-2 w-[320px]">
+							<div className="grid grid-cols-4 w-[320px]">
 								{topReel.map((symbol, index) => (
 									<motion.div
 										key={index}
@@ -215,20 +207,18 @@ const createSymbolLayout = () => {
 							</div>
 
 							{/* Main Slot Grid */}
-							<div className="grid grid-cols-6 w-[500px]  ">
+							<div className="grid grid-cols-6  grid-rows-5 gap-1 w-[500px] h-[300px]">
 								{slots.map((column, colIndex) =>
 									column.map((item, itemIndex) => {
 										const { symbol, rowSpan, rowStart } = item;
-
-										// Create a truly unique key based on multiple properties
 										const uniqueKey = `${colIndex}-${itemIndex}-${symbol}-${rowStart}`;
-
 										const animation = isSpecial(symbol) ? glowingAnimation : {};
 
-										// ensure each item is placed in the correct grid position and no image overlaps the other or is hidden
-										// Height based on row span
-										const heightClass =
-											rowSpan === 3 ? "h-[]" : "h-[50px]";
+										// Define proper height based on rowSpan
+										const heightStyle = 
+											rowSpan === 3 ? "240px" : 
+											rowSpan === 2 ? "160px" : 
+											"60px";
 
 										return (
 											<motion.div
@@ -237,6 +227,8 @@ const createSymbolLayout = () => {
 												style={{
 													gridColumn: colIndex + 1,
 													gridRow: `${rowStart + 1} / span ${rowSpan}`,
+													height: heightStyle,
+													width: "80px",
 												}}
 												{...animation}
 												initial={{ opacity: 0, y: -50 }}
@@ -246,10 +238,9 @@ const createSymbolLayout = () => {
 													delay: colIndex * 0.05,
 												}}
 											>
-												<div
-													className={`symbol ${
+												<div className={`symbol w-full h-full flex items-center justify-center ${
 														isSpecial(symbol) ? "special-symbol" : ""
-													} ${heightClass}`}
+													}`}
 												>
 													<img src={`/images/${symbol}.png`} alt={symbol} />
 												</div>
