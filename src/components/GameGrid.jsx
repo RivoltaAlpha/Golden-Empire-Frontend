@@ -192,9 +192,9 @@ const GameGrid = () => {
 						</AnimatePresence>
 
 						{/* Game Container */}
-						<div className="relative z-10 flex flex-col items-center mt-10 justify-center gap-[8px] "
+						<div className="relative z-10 flex flex-col items-center justify-center gap-[8px] "
 							 style={{
-								width: "1450px",  // Fixed width
+								width: "1200px",  // Fixed width
 								height: "600px", // Fixed height
 								transform: "scale(1)",  // Prevents zoom changes
 								overflow: "hidden",
