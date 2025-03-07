@@ -5,13 +5,14 @@ import { TiMinusOutline } from "react-icons/ti";
 import { MdAdd } from "react-icons/md";
 import { Howl } from "howler";
 import { useState } from "react";
-import spin from "../../public/images/spin.webp"
+
 import {
 	spinSound,
 	winSound,
 	gameOverSound,
 	pauseBackgroundMusic,
 } from "../Utiils/soundManager";
+
 
 const Controls = ({
 	coins,
@@ -21,7 +22,7 @@ const Controls = ({
 	globalMultiplier,
 }) => {
 	const handleSpin = () => {
-    pauseBackgroundMusic;
+		pauseBackgroundMusic;
 		spinSound.play(); // Play sound when spin is clicked
 		spin();
 
