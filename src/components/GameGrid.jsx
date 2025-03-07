@@ -174,7 +174,7 @@ const GameGrid = () => {
   return (
 		<>
 			<div className="flex flex-col">
-				<div className="relative flex items-center justify-center">
+				<div className="relative flex items-center justify-center ">
 					<ToastContainer />
 
 					<div
@@ -186,7 +186,7 @@ const GameGrid = () => {
 						</AnimatePresence>
 
 						{/* Game Container */}
-						<div className="relative z-10 flex flex-col items-center  gap-[8px] h-[450px] ">
+						<div className="relative z-10 flex flex-col items-center justify-center gap-[8px] h-[600px] ">
 							{/* Top Horizontal Reel */}
 							<div className="grid grid-cols-4 w-[320px]">
 								{topReel.map((symbol, index) => (
@@ -207,7 +207,7 @@ const GameGrid = () => {
 							</div>
 
 							{/* Main Slot Grid */}
-							<div className="grid grid-cols-6 gap-1 w-full max-w-[90%] sm:max-w-[600px] h-auto">
+							<div className="grid grid-cols-6 gap-1 w-full mt-8 max-w-[90%] sm:max-w-[600px] h-auto">
 							{slots.map((column, colIndex) =>
 									column.map((item, itemIndex) => {
 										const { symbol, rowSpan, rowStart } = item;
