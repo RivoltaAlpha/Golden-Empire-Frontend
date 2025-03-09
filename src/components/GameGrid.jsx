@@ -195,7 +195,7 @@ const GameGrid = () => {
 						</AnimatePresence>
 
 						<div className="relative grid grid-cols-3 px-80 lg:mt-40">
-							<div className="text-yellow-400 font-bold text-lg ml-40 py-1 rounded-md shadow-md text-center ">
+							<div className="text-yellow-400 font-bold text-lg ml-52 py-1 rounded-md shadow-md text-center ">
 								{ways} WAYS
 							</div>
 							<div className="col-span-2 flex justify-center overflow-hidden h-10 pb-2 mr-10 ">
@@ -208,7 +208,7 @@ const GameGrid = () => {
 						</div>
 
 						{/* Game Container */}
-						<div className="relative z-10 flex flex-col items-center justify-center lg:mt-0 md:mt-28  "
+						<div className="relative z-10 flex flex-col items-center justify-center mt-0 lg:mt-0"
 							 style={{
 								width: "auto",  // Fixed width
 								height: "450px", // Fixed height
