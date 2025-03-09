@@ -181,26 +181,21 @@ const GameGrid = () => {
 
   return (
 		<>
-			<div className="flex flex-col"
->
-				<div className="relative flex items-center justify-center ">
+			<div className="flex flex-col">
+				<div className="relative flex items-center justify-center mx-2">
 					<ToastContainer />
-
 					<div
-						className="absolute inset-0 w-full min-h-screen bg-no-repeat bg-center"
+						className="absolute inset-0 w-full min-h-screen bg-no-repeat bg-center  "
 						style={{ backgroundImage: "url('/images/background.png')", 
 							backgroundAttachment: "fixed",
-						}
-
-					}
-						
-					>
+							transform: "scale(1)",  // Prevents zoom changes
+						}}>
 						<AnimatePresence>
 							{jackpotTriggered && <JackpotBanner />}
 						</AnimatePresence>
 
-						<div className="relative grid grid-cols-3 px-80 mt-20">
-							<div className="text-yellow-400 font-bold text-lg ml-32 py-1 rounded-md shadow-md text-center ">
+						<div className="relative grid grid-cols-3 px-80 lg:mt-40">
+							<div className="text-yellow-400 font-bold text-lg ml-40 py-1 rounded-md shadow-md text-center ">
 								{ways} WAYS
 							</div>
 							<div className="col-span-2 flex justify-center overflow-hidden h-10 pb-2 mr-10 ">
@@ -213,20 +208,19 @@ const GameGrid = () => {
 						</div>
 
 						{/* Game Container */}
-						<div className="relative z-10 flex flex-col items-center justify-center gap-[8px] "
+						<div className="relative z-10 flex flex-col items-center justify-center lg:mt-0 md:mt-28  "
 							 style={{
 								width: "auto",  // Fixed width
-								height: "600px", // Fixed height
+								height: "450px", // Fixed height
 								transform: "scale(1)",  // Prevents zoom changes
-								overflow: "hidden",
 							  }}
 						>
 							{/* Top Horizontal Reel */}
-							<div className="grid grid-cols-4 w-[320px]">
+							<div className="grid grid-cols-4 lg:w-[320px] mb-8">
 								{topReel.map((symbol, index) => (
 									<motion.div
 										key={index}
-										className="w-[80px] h-[80px] flex items-center justify-center"
+										className="lg:w-[80px] lg:h-[80px] w-12 flex items-start justify-start"
 										initial={{ opacity: 0, y: -50 }}
 										animate={{ opacity: 1, y: 0 }}
 										transition={{ duration: isSpinning ? 0.8 : 0.5 }}
@@ -241,7 +235,7 @@ const GameGrid = () => {
 							</div>
 
 							{/* Main Slot Grid */}
-							<div className="grid grid-cols-6 gap-1 w-full mt-8 max-w-[90%] sm:max-w-[600px] h-auto">
+							<div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 sm:gap-4 max-w-[90%] lg:max-w-[600px] h-auto">
 							{slots.map((column, colIndex) =>
 									column.map((item, itemIndex) => {
 										const { symbol, rowSpan, rowStart } = item;
@@ -250,14 +244,15 @@ const GameGrid = () => {
 
 										// Define proper height based on rowSpan
 										const heightStyle = 
-											rowSpan === 3 ? "140px" : 
-											rowSpan === 2 ? "100px" : 
-											"60px";
+										rowSpan === 3 ? "h-[80px] sm:h-[30px] md:h-[40px] lg:h-[40px]" : 
+										rowSpan === 2 ? "h-[60px] sm:h-[25px] md:h-[45px] lg:h-[60px]" : 
+										"h-12 sm:h-12 md:h-[30px] lg:h-[46px]";
 
 										return (
 											<motion.div
 												key={uniqueKey}
-												className={`w-full ${heightStyle} flex items-center justify-center`}												style={{
+												className={`w-full ${heightStyle} flex items-start justify-start`}												
+												style={{
 													gridColumn: colIndex + 1,
 													gridRow: `${rowStart + 1} / span ${rowSpan}`,
 													height: heightStyle,
@@ -271,7 +266,7 @@ const GameGrid = () => {
 													delay: colIndex * 0.05,
 												}}
 											>
-												<div className={`symbol w-full h-full flex items-center justify-center ${
+												<div className={`symbol lg:w-full md:w-3/4 w-1/2 lg:h-full md:h-3/4 h-1/2  flex items-start justify-start ${
 														isSpecial(symbol) ? "special-symbol" : ""
 													}`}
 												>
@@ -310,7 +305,7 @@ const GameGrid = () => {
 								/>
 							)}
 						</AnimatePresence>
-						<div className="relative w-full flex flex-col sm:flex-row items-center justify-center lg:mt-28  mt-20 space-y-4 sm:space-y-0 sm:space-x-4">
+						<div className="relative w-full flex flex-col sm:flex-row items-center justify-center lg:mt-56  mt-2 space-y-4 sm:space-y-0 sm:space-x-4">
 							<Controls
 								coins={coins}
 								betAmount={betAmount}

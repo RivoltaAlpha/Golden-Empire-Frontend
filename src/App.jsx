@@ -15,6 +15,7 @@ const App = () => {
                 overflow: "hidden",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
+                backgroundAttachment: "fixed", 
               }}>
                 <div className="absolute inset-0 bg-black opacity-20"></div>
                 <Routes>
