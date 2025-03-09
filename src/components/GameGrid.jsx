@@ -194,18 +194,18 @@ const GameGrid = () => {
 							{jackpotTriggered && <JackpotBanner />}
 						</AnimatePresence>
 
-						<div className="relative flex flex-col items-center md:flex-row md:justify-center lg:gap-48 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 py-2 md:py-4 lg:mt-28 mt-0">
+						<div className="relative flex flex-col items-center md:flex-row md:justify-center lg:gap-52 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24  md:py-4 lg:mt-36 sm:mt-0">
 							{/* Ways counter - centered on mobile, left on larger screens */}
-							<div className="text-yellow-400 font-bold text-lg md:text-xl py-1 px-3 rounded-md shadow-md text-center bg-black bg-opacity-30 mb-2 md:mb-0">
+							<div className="text-yellow-400 font-bold text-lg md:text-xl py-1 px-3 rounded-md shadow-md text-center mb-2 md:mb-0">
 								{ways} WAYS
 							</div>
-							
+						
 							{/* Logo - centered on all screens */}
 							<div className="flex justify-center">
 								<img
 								src="/images/logo.png"
 								alt="Golden Empire"
-								className="w-[180px] sm:w-[200px] md:w-[220px] lg:w-[250px] h-auto object-contain"
+								className="w-[160px] sm:w-[150px] md:w-[180px] lg:w-[200px] object-contain"
 								/>
 							</div>
 						</div>
@@ -219,11 +219,11 @@ const GameGrid = () => {
 							  }}
 						>
 							{/* Top Horizontal Reel */}
-							<div className="grid grid-cols-4 lg:w-[320px] mb-8">
+							<div className="grid grid-cols-4 lg:w-[320px] gap-10 lg:gap-0 mb-8 ">
 								{topReel.map((symbol, index) => (
 									<motion.div
 										key={index}
-										className="lg:w-[80px] lg:h-[80px] w-12 flex items-start justify-start"
+										className="lg:w-[80px] lg:h-[80px] flex items-start justify-start"
 										initial={{ opacity: 0, y: -50 }}
 										animate={{ opacity: 1, y: 0 }}
 										transition={{ duration: isSpinning ? 0.8 : 0.5 }}
@@ -231,14 +231,14 @@ const GameGrid = () => {
 										<img
 											src={`/images/${symbol}.png`}
 											alt={symbol}
-											className="w-20 h-16 object-contain"
+											className="w-24 h-20 object-contain"
 										/>
 									</motion.div>
 								))}
 							</div>
 
 							{/* Main Slot Grid */}
-							<div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 sm:gap-4 max-w-[90%] lg:max-w-[600px] h-auto">
+							<div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 sm:gap-4 max-w-[95%] lg:max-w-[600px] h-auto">
 							{slots.map((column, colIndex) =>
 									column.map((item, itemIndex) => {
 										const { symbol, rowSpan, rowStart } = item;
@@ -308,7 +308,7 @@ const GameGrid = () => {
 								/>
 							)}
 						</AnimatePresence>
-						<div className="relative w-full flex flex-col sm:flex-row items-center justify-center lg:mt-56  mt-2 space-y-4 sm:space-y-0 sm:space-x-4">
+						<div className="relative w-full flex flex-col sm:flex-row items-start justify-center lg:mt-56  mt-2 space-y-4 sm:space-y-0 sm:space-x-4">
 							<Controls
 								coins={coins}
 								betAmount={betAmount}
