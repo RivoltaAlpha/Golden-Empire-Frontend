@@ -70,7 +70,7 @@ const GameGrid = () => {
   }, [freeSpins]);
 
   useEffect(() => {
-    if (megaWilds.length > 6) {
+    if (megaWilds.length > 4) {
       setShowMegaImage(true);
       setTimeout(() => {
         setShowMegaImage(false);
@@ -194,15 +194,18 @@ const GameGrid = () => {
 							{jackpotTriggered && <JackpotBanner />}
 						</AnimatePresence>
 
-						<div className="relative grid grid-cols-3 px-80 lg:mt-40">
-							<div className="text-yellow-400 font-bold text-lg ml-52 py-1 rounded-md shadow-md text-center ">
+						<div className="relative flex flex-col items-center md:flex-row md:justify-center lg:gap-48 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 py-2 md:py-4 lg:mt-28 mt-0">
+							{/* Ways counter - centered on mobile, left on larger screens */}
+							<div className="text-yellow-400 font-bold text-lg md:text-xl py-1 px-3 rounded-md shadow-md text-center bg-black bg-opacity-30 mb-2 md:mb-0">
 								{ways} WAYS
 							</div>
-							<div className="col-span-2 flex justify-center overflow-hidden h-10 pb-2 mr-10 ">
+							
+							{/* Logo - centered on all screens */}
+							<div className="flex justify-center">
 								<img
-									src="/images/logo.png"
-									alt="Golden Empire"
-									className="w-[250px] h-auto object-contain"
+								src="/images/logo.png"
+								alt="Golden Empire"
+								className="w-[180px] sm:w-[200px] md:w-[220px] lg:w-[250px] h-auto object-contain"
 								/>
 							</div>
 						</div>
