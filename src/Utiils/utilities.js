@@ -162,7 +162,7 @@ export const checkForWins = (
     setTimeout(() => setJackpotTriggered(true), 500);
   }
   
-  const shouldWin = Math.random() < 0.4; // 40% chance of a win
+  const shouldWin = Math.random() < 0.2; 
   
   if (shouldWin) {
     for (let row = 0; row < gridSize.rows; row++) {

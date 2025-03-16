@@ -194,7 +194,7 @@ const GameGrid = () => {
 							{jackpotTriggered && <JackpotBanner />}
 						</AnimatePresence>
 
-						<div className="relative flex flex-col items-center md:flex-row md:justify-center lg:gap-52 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24  md:py-4 lg:mt-[8%] sm:mt-[5%] mt-0">
+						<div className="relative flex flex-col items-center md:flex-row md:justify-center lg:gap-52 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 md:py-4 lg:mt-[8%] sm:mt-[5%] mt-0 xl:mt-[12%]">
 							<div className="text-yellow-400 font-bold text-lg md:text-xl py-1 px-3 rounded-md shadow-md text-center mb-2 md:mb-0">
 								{ways} WAYS
 							</div>
@@ -218,7 +218,7 @@ const GameGrid = () => {
 							  }}
 						>
 							{/* Top Horizontal Reel */}
-							<div className="grid grid-cols-4 lg:w-[320px] gap-10 lg:gap-0 mb-8"> 
+							<div className="grid grid-cols-4 lg:w-[320px] gap-4 lg:gap-0 sm:mb-2 lg:mb-8 xl:mb-2"> 
 								{topReel.map((symbol, index) => (
 									<motion.div
 										key={index}
