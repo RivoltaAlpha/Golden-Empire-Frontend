@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from "react";
-import { getRandomSymbol, checkForWins, isSpecial, isMegaWild,  playSpecialSound, playJackpotSound, playWinSound, playGameOverSound, playMultiplierSound, TopRandomSymbol } from "../Utiils/utilities";
+import { getRandomSymbol, checkForWins, isSpecial, playSpecialSound, playJackpotSound, playWinSound, playGameOverSound, playMultiplierSound, TopRandomSymbol } from "../Utiils/utilities";
 import { winAnimation,glowingAnimation, multiplierImageAnimation} from "../Utiils/Animations";
 import JackpotBanner from "./JackpotNotification";
 import Controls from "./ControlPanel";
@@ -182,7 +182,7 @@ const GameGrid = () => {
   return (
 		<>
 			<div className="flex flex-col">
-				<div className="relative flex items-center justify-center mx-2">
+				<div className="relative flex items-center justify-center w-full h-full">
 					<ToastContainer />
 					<div
 						className="absolute inset-0 w-full min-h-screen bg-no-repeat bg-center  "
@@ -194,8 +194,7 @@ const GameGrid = () => {
 							{jackpotTriggered && <JackpotBanner />}
 						</AnimatePresence>
 
-						<div className="relative flex flex-col items-center md:flex-row md:justify-center lg:gap-52 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24  md:py-4 lg:mt-36 sm:mt-0">
-							{/* Ways counter - centered on mobile, left on larger screens */}
+						<div className="relative flex flex-col items-center md:flex-row md:justify-center lg:gap-52 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24  md:py-4 lg:mt-[8%] sm:mt-[5%] mt-0">
 							<div className="text-yellow-400 font-bold text-lg md:text-xl py-1 px-3 rounded-md shadow-md text-center mb-2 md:mb-0">
 								{ways} WAYS
 							</div>
@@ -211,15 +210,15 @@ const GameGrid = () => {
 						</div>
 
 						{/* Game Container */}
-						<div className="relative z-10 flex flex-col items-center justify-center mt-0 lg:mt-0"
+						<div className="relative z-10 flex flex-col items-center mt-0 lg:mt-0"
 							 style={{
 								width: "auto",  // Fixed width
-								height: "450px", // Fixed height
+								height: "480px", // Fixed height
 								transform: "scale(1)",  // Prevents zoom changes
 							  }}
 						>
 							{/* Top Horizontal Reel */}
-							<div className="grid grid-cols-4 lg:w-[320px] gap-10 lg:gap-0 mb-8 ">
+							<div className="grid grid-cols-4 lg:w-[320px] gap-10 lg:gap-0 mb-8"> 
 								{topReel.map((symbol, index) => (
 									<motion.div
 										key={index}
@@ -231,7 +230,7 @@ const GameGrid = () => {
 										<img
 											src={`/images/${symbol}.png`}
 											alt={symbol}
-											className="w-24 h-20 object-contain"
+											className="w-16 h-12 object-contain"
 										/>
 									</motion.div>
 								))}
@@ -308,7 +307,7 @@ const GameGrid = () => {
 								/>
 							)}
 						</AnimatePresence>
-						<div className="relative w-full flex flex-col sm:flex-row items-start justify-center lg:mt-56  mt-2 space-y-4 sm:space-y-0 sm:space-x-4">
+						<div className="relative w-full flex flex-col sm:flex-row items-start justify-cente lg:mt-[10%] mt-2 space-y-4 sm:space-y-0 sm:space-x-4">
 							<Controls
 								coins={coins}
 								betAmount={betAmount}

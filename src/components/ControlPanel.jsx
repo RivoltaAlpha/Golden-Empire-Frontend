@@ -23,7 +23,7 @@ const Controls = ({
 	};
 
 	return (
-			<div className="bg-black/50 backdrop-blur-sm rounded-xl flex flex-col items-center absolute w-full mt-44 lg:bottom-0 lg:mb-2 p-2 sm:h-auto sm:py-4 sm:px-2">
+			<div className="bg-black/50 backdrop-blur-sm rounded-xl flex flex-col items-center absolute w-full lg:bottom-0 lg:mb-2 p-2 sm:h-auto sm:py-4 sm:px-2">
 				<div className="flex flex-wrap items-center lg:justify-between lg:gap-10 ">
 				{/* Global Multiplier */}
 				<div className="lg:text-lg font-bold text-yellow-400 text-center sm:text-base">
